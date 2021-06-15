@@ -13,3 +13,6 @@ def search_book(request, *args, **kwargs):
 def admin_login(request, *args, **kwargs):
     print(request.user)
     return render(request, "adminlogin.html", {})
+
+def BookAdd(request, *args, **kwargs):
+        return render(request, "BookAdd.html", {})
