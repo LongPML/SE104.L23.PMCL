@@ -8,5 +8,6 @@ urlpatterns = [
     path('searchbook/', search_book,),
     path('admin/', admin.site.urls),
     path('adminlogin/', admin_login),
-    path('book/add', BookAdd)
+    path('book/add', BookAdd),
+    path('book/delete', BookDelete),
 ]

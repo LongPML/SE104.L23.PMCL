@@ -15,3 +15,6 @@ def admin_login(request, *args, **kwargs):
 
 def BookAdd(request, *args, **kwargs):
         return render(request, "BookAdd.html", {})
+
+def BookDelete(request, *args, **kwargs):
+        return render(request, "BookDelete.html", {})
