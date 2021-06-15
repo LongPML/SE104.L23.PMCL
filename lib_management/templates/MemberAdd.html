@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
         <head>
-                <title>Book Add</title>
+                <title>Member Add</title>
                 <style>
                         #AddBox{
                                 position: absolute; width: 500px; height: 400px; text-align: center; left: 50%; top: 50%; transform: translate(-50%, -50%); border: 1px solid black; 
@@ -23,20 +23,20 @@
         <body>
                 {% include "navbar.html" %}
                 <div id="AddBox"> 
-                        <h1 id="AddTitle">Book Information</h1>
+                        <h1 id="AddTitle">Member Information</h1>
                                 
                         <table id="AddTable">
                                 <tr>
-                                        <td><input id="AddInput" type="text" placeholder="Book Name"/></td>
+                                        <td><input id="AddInput" type="text" placeholder="Name"/></td>
                                 </tr>
                                 <tr>
-                                        <td><input id="AddInput" type="text" placeholder="Author"/></td>
+                                        <td><input id="AddInput" type="number" placeholder="Age"/></td>
                                 </tr>
                                 <tr>
-                                        <td><input id="AddInput" type="text" placeholder="Topic"/></td>
+                                        <td><input id="AddInput" type="text" placeholder="Address"/></td>
                                 </tr>
                                 <tr>
-                                        <td><input id="AddInput" type="text" placeholder="Position"/></td>
+                                        <td><input id="AddInput" type="text" placeholder="Class"/></td>
                                 </tr>
                                 <tr>
                                         <td><button id="AddButton">ADD</button></td>

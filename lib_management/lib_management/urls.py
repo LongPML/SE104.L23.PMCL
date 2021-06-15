@@ -10,4 +10,6 @@ urlpatterns = [
     path('adminlogin/', admin_login),
     path('book/add', BookAdd),
     path('book/delete', BookDelete),
+    path('card/add', CardAdd),
+    path('member/add', MemberAdd),
 ]

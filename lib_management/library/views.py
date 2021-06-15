@@ -18,3 +18,9 @@ def BookAdd(request, *args, **kwargs):
 
 def BookDelete(request, *args, **kwargs):
         return render(request, "BookDelete.html", {})
+
+def CardAdd(request, *args, **kwargs):
+        return render(request, "CardAdd.html", {})
+
+def MemberAdd(request, *args, **kwargs):
+        return render(request, "MemberAdd.html", {})
