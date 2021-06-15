@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
         <head>
+                <meta charset="UTF-8" />
                 <title>Book Add</title>
                 <style>
                         #AddBox{
@@ -24,24 +25,26 @@
                 {% include "navbar.html" %}
                 <div id="AddBox"> 
                         <h1 id="AddTitle">Book Information</h1>
-                                
+                        <form method="POST">
+                        {% csrf_token %}  
                         <table id="AddTable">
                                 <tr>
-                                        <td><input id="AddInput" type="text" placeholder="Book Name"/></td>
+                                        <td><input id="AddInput" name="title" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Book Name"/></td>
                                 </tr>
                                 <tr>
-                                        <td><input id="AddInput" type="text" placeholder="Author"/></td>
+                                        <td><input id="AddInput" name="authorname" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Author"/></td>
                                 </tr>
                                 <tr>
-                                        <td><input id="AddInput" type="text" placeholder="Topic"/></td>
+                                        <td><input id="AddInput" name="subjectname" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Topic"/></td>
                                 </tr>
                                 <tr>
-                                        <td><input id="AddInput" type="text" placeholder="Position"/></td>
+                                        <td><input id="AddInput" name="position" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Position"/></td>
                                 </tr>
                                 <tr>
-                                        <td><button id="AddButton">ADD</button></td>
+                                        <td><button id="AddButton" type="submit">ADD</button></td>
                                 </tr>
                         </table>
+                        </form>
                 </div>
                 {% include "footer.html" %}
         </body>
