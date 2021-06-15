@@ -1,4 +1,4 @@
-"""Library_Management_System URL Configuration
+"""trydjango URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
@@ -16,6 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from pages.views import *
+
 urlpatterns = [
+    path('', home_view, name='home'),
+    path('searchbook/', search_book,),
     path('admin/', admin.site.urls),
+    path('adminlogin/', admin_login),
 ]
