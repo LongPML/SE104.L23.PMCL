@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+        <head>
+                <title>Borrow Card Add</title>
+                <style>
+                        #AddBox{
+                                position: absolute; width: 1000px; height: 400px; text-align: center; left: 50%; top: 50%; transform: translate(-50%, -50%); border: 1px solid black; 
+                        }
+                        #AddTitle { 
+                                text-align: center; font-size: 50px;
+                        }
+                        #AddTable {
+                                margin: 0 auto; font-size: 20px; border-spacing: 5px 15px;
+                        }
+                        #AddInput {
+                                text-align: center; margin: 0 auto; font-size: 25px; width: 400px;
+                        }
+                        #AddButton {
+                                text-align: center; font-size: 25px;
+                        }
+                </style>
+        </head>
+        <body>
+                {% include "navbar.html" %}
+                <div id="AddBox"> 
+                        <h1 id="AddTitle">Borrow Card Information</h1>
+                                
+                        <table id="AddTable">
+                                <tr>
+                                        <td><input id="AddInput" type="number" placeholder="Borrow Card ID"/></td>
+                                        <td><input id="AddInput" type="number" placeholder="Book ID"/></td>
+                                </tr>
+                                <tr>
+                                        <td><input id="AddInput" type="date" placeholder="Borrow Day"/></td>
+                                        <td><input id="AddInput" type="date" placeholder="Due Day"/></td>
+                                </tr>
+                                <tr>
+                                        <td><input id="AddInput" type="number" placeholder="Member ID"/></td>
+                                        <td><input id="AddInput" type="date" placeholder="Return Day"/></td>
+                                </tr>
+                                <tr>
+                                        <td></td>
+                                        <td><button id="AddButton">ADD</button></td>
+                                </tr>
+                        </table>
+                </div>
+                {% include "footer.html" %}
+        </body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+        <head>
+                <title>Book Delete</title>
+                <style>
+                        #DelBox{
+                                position: absolute; width: 500px; height: 300px; text-align: center; left: 50%; top: 50%; transform: translate(-50%, -50%); border: 1px solid black; 
+                        }
+                        #DelTitle { 
+                                text-align: center; font-size: 50px;
+                        }
+                        #DelTable {
+                                margin: 0 auto; font-size: 20px; border-spacing: 5px 15px;
+                        }
+                        #DelInput {
+                                text-align: center; margin: 0 auto; font-size: 25px; width: 400px;
+                        }
+                        #DelButton {
+                                text-align: center; font-size: 25px;
+                        }
+                </style>
+        </head>
+        <body>
+                {% include "navbar.html" %}
+                <div id="DelBox"> 
+                        <h1 id="DelTitle">Book Information</h1>
+                                
+                        <table id="DelTable">
+                                <tr>
+                                        <td><input id="DelInput" type="number" placeholder="Book ID"/></td>
+                                </tr>
+                                <tr>
+                                        <td><input id="DelInput" type="text" placeholder="Book Name"/></td>
+                                </tr>
+                                <tr>
+                                        <td><button id="DelButton">Delete</button></td>
+                                </tr>
+                        </table>
+                </div>
+                {% include "footer.html" %}
+        </body>
+</html>
