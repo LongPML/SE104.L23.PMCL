@@ -1,5 +1,6 @@
 ##### library.views.py
 from django.shortcuts import render
+
 from library.models import *
 import pyodbc
 conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'
@@ -21,7 +22,7 @@ def admin_login(request, *args, **kwargs):
 	return render(request, "adminlogin.html", {})
 
 def BookAdd(request, *args, **kwargs):
-	Book = Books()
+    Book = Books()
 	Book.title = request.POST.get('title')
 	Book.position = request.POST.get('position')
 	Author = Authors()
@@ -38,3 +39,7 @@ def BookAdd(request, *args, **kwargs):
 	last_author_id = [i[0] for i in cursor.execute(f"SELECT TOP 1 AUTHOR_ID FROM AUTHORS ORDER BY BOOK_ID DESC ")][-1]
 	last_subject_id = [i[0] for i in cursor.execute(f"SELECT TOP 1 SUBJECT_ID FROM SUBJECTS ORDER BY SUBJECT_ID DESC ")][-1]
 		return render(request, "BookAdd.html", {})
+
+def BookDelete(request, *args, **kwargs):
+        return render(request, "BookDelete.html", {}) 
+	 
