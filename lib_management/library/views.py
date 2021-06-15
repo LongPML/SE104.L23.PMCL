@@ -37,5 +37,4 @@ def BookAdd(request, *args, **kwargs):
 	last_book_id = [i[0] for i in cursor.execute(f"SELECT TOP 1 BOOK_ID FROM BOOKS ORDER BY BOOK_ID DESC ")][-1]
 	last_author_id = [i[0] for i in cursor.execute(f"SELECT TOP 1 AUTHOR_ID FROM AUTHORS ORDER BY BOOK_ID DESC ")][-1]
 	last_subject_id = [i[0] for i in cursor.execute(f"SELECT TOP 1 SUBJECT_ID FROM SUBJECTS ORDER BY SUBJECT_ID DESC ")][-1]
-	cursor.execute(f"insert into ")
-	return render(request, "BookAdd.html", {})
+		return render(request, "BookAdd.html", {})
