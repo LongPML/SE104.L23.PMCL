@@ -24,25 +24,27 @@
                 {% include "navbar.html" %}
                 <div id="AddBox"> 
                         <h1 id="AddTitle">Borrow Card Information</h1>
-                                
+                        <form method="POST">
+                        {% csrf_token %}
                         <table id="AddTable">
                                 <tr>
                                         <td><input id="AddInput" type="number" placeholder="Borrow Card ID"/></td>
-                                        <td><input id="AddInput" type="number" placeholder="Book ID"/></td>
+                                        <td><input id="AddInput" type="number" name="bookid" placeholder="Book ID"/></td>
                                 </tr>
                                 <tr>
-                                        <td><input id="AddInput" type="date" placeholder="Borrow Day"/></td>
-                                        <td><input id="AddInput" type="date" placeholder="Due Day"/></td>
+                                        <td><input id="AddInput" type="date" name="borrow_date" placeholder="Borrow Date"/></td>
+                                        <td><input id="AddInput" type="date" name="due_date" placeholder="Due Date"/></td>
                                 </tr>
                                 <tr>
-                                        <td><input id="AddInput" type="number" placeholder="Member ID"/></td>
-                                        <td><input id="AddInput" type="date" placeholder="Return Day"/></td>
+                                        <td><input id="AddInput" type="number" name="libcardid" placeholder="Member ID"/></td>
+                                        <td><input id="AddInput" type="date" name="return_date" placeholder="Return Date"/></td>
                                 </tr>
                                 <tr>
                                         <td></td>
-                                        <td><button id="AddButton">ADD</button></td>
+                                        <td><button id="AddButton" type="submit">ADD</button></td>
                                 </tr>
                         </table>
+                        </form>
                 </div>
                 {% include "footer.html" %}
         </body>

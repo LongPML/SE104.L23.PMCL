@@ -24,24 +24,26 @@
                 {% include "navbar.html" %}
                 <div id="AddBox"> 
                         <h1 id="AddTitle">Member Information</h1>
-                                
+                        <form method="POST">
+                        {% csrf_token %}  
                         <table id="AddTable">
                                 <tr>
-                                        <td><input id="AddInput" type="text" placeholder="Name"/></td>
+                                        <td><input id="AddInput" name="name" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Name" /></td>
                                 </tr>
                                 <tr>
-                                        <td><input id="AddInput" type="number" placeholder="Age"/></td>
+                                        <td><input id="AddInput" name="age" type="number" placeholder="Age"/></td>
                                 </tr>
                                 <tr>
-                                        <td><input id="AddInput" type="text" placeholder="Address"/></td>
+                                        <td><input id="AddInput" name="address" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Address" /></td>
                                 </tr>
                                 <tr>
-                                        <td><input id="AddInput" type="text" placeholder="Class"/></td>
+                                        <td><input id="AddInput" name="class" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Class" /></td>
                                 </tr>
                                 <tr>
-                                        <td><button id="AddButton">ADD</button></td>
+                                        <td><button id="AddButton" type="submit">ADD</button></td>
                                 </tr>
                         </table>
+                        </form>
                 </div>
                 {% include "footer.html" %}
         </body>
