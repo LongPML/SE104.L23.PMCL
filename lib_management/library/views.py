@@ -3,7 +3,7 @@ from library.models import *
 import pyodbc
 conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'
                       'Server=ADMIN;' 
-                      'Database=QLTV2;'
+                      'Database=QLTV;'
                       'Trusted_Connection=yes;')
 cursor = conn.cursor()
 # Create your views here.
