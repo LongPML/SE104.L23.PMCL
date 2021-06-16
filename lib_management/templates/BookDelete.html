@@ -24,18 +24,19 @@
                 {% include "navbar.html" %}
                 <div id="DelBox"> 
                         <h1 id="DelTitle">Book Information</h1>
-                                
+                        <form method="POST">
                         <table id="DelTable">
                                 <tr>
-                                        <td><input id="DelInput" type="number" placeholder="Book ID"/></td>
+                                        <td><input id="DelInput" name="bookid" type="number" placeholder="Book ID"/></td>
                                 </tr>
                                 <tr>
-                                        <td><input id="DelInput" type="text" placeholder="Book Name"/></td>
+                                        <td><input id="DelInput" name="title" type="text" placeholder="Book Name" onkeyup="this.value = this.value.toUpperCase();"/></td>
                                 </tr>
                                 <tr>
-                                        <td><button id="DelButton">Delete</button></td>
+                                        <td><button id="DelButton" type="submit">Delete</button></td>
                                 </tr>
                         </table>
+                        </form>
                 </div>
                 {% include "footer.html" %}
         </body>
