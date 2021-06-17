@@ -28,13 +28,13 @@ class Borrowcards(models.Model):
 	libcardid = models.IntegerField()
 	borrow_date = models.DateField(auto_now=True)
 	due_date = models.DateField()
-	return_date = 'NULL'
+	return_date = models.DateField()
 
 class CardDetail(models.Model):
-	BORROWCARD_ID = models.IntegerField()
-	NAME = models.CharField(max_length=30)
-	TITLE = models.CharField(max_length=30)
-	DUE_DATE = models.DateField()
-	RETURN_DATE = models.DateField()
+	id_card = models.IntegerField()
+	name = models.CharField(max_length=30)
+	title = models.CharField(max_length=30)
+	due_date = models.DateField()
+	return_date = models.DateField()
 
 
