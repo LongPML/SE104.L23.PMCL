@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from library.models import *
 import pyodbc
+import datetime
 conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'
                       'Server=ADMIN;' 
                       'Database=QLTV;'
@@ -30,8 +31,8 @@ def BookAdd(request, *args, **kwargs):
     Subject.name = request.POST.get('subjectname')
     subject_names = [i[0] for i in cursor.execute(f"SELECT NAME FROM SUBJECTS")]
     if Book.title != None and Book.position !=None and Authors.name != None and Subject.name != None:
-        cursor.execute(f"insert into BOOKS (TITLE, STATE, POSITION)+\
-                         values(N'{Book.title}',{Book.state},N'{Book.position}')")
+        cursor.execute(f"""insert into BOOKS (TITLE, STATE, POSITION)
+                         values(N'{Book.title}',{Book.state},N'{Book.position}')""")
         cursor.commit()
         if Authors.name not in author_names:
             cursor.execute(f"insert into AUTHORS values(N'{Authors.name}')")
@@ -59,14 +60,26 @@ def CardAdd(request, *args, **kwargs):
     card.libcardid = request.POST.get('libcardid')
     card.borrow_date = request.POST.get('borrow_date')
     card.due_date = request.POST.get('due_date')
-    card.return_date = request.POST.get('return_date')
-    if card.bookid != None and card.libcardid != None and card.borrow_date != None and card.due_date != None:
+    # card.borrow_date = datetime.datetime.strptime(request.POST.get('date'),"%Y-%m-%d").date()
+    if card.bookid != None and card.libcardid != None and card.borrow_date != "" and card.due_date != "":
         cursor.execute(f"""insert into BORROWCARDS (BOOK_ID, LIBCARD_ID, BORROW_DATE, DUE_DATE, RETURN_DATE)
-                         VALUES({card.bookid},{card.libcardid},'{card.borrow_date}','{card.due_date}','{card.return_date}')""")
+                         VALUES({card.bookid},{card.libcardid},'{card.borrow_date}','{card.due_date}',{card.return_date})""")
+        cursor.commit()
+        cursor.execute(f"""update BOOKS set STATE = 0 WHERE BOOK_ID = {card.bookid}""")
         cursor.commit()
         return render(request, "CardAdd.html", {})
     else:
         return render(request, "CardAdd.html", {})
+
+def CardDetail(request, *args, **kwargs):
+
+    result = cursor.execute(f"""select BC.BORROWCARD_ID, LC.NAME, B.TITLE , BC.DUE_DATE, BC.RETURN_DATE
+                               from BORROWCARDS BC join LIBCARDS LC 
+                               on BC.LIBCARD_ID = LC.LIBCARD_ID 
+                               join BOOKS B
+                               on BC.BOOK_ID = B.BOOK_ID""")
+    result = cursor.fetchall()
+    return render(request, 'CardDetail.html', {'CardDetail':result})
 
 def MemberAdd(request, *args, **kwargs):
     member = Libcards()
@@ -75,11 +88,12 @@ def MemberAdd(request, *args, **kwargs):
     member.address = request.POST.get('address')
     member.classroom = request.POST.get('class')
     if member.name != None and member.age != None and member.address != None and member.classroom != None:
-        cursor.execute(f"insert into LIBCARDS (NAME, AGES, ADDRESS, CLASS) +\
-                         values(N'{member.name}',{member.age},N'{member.address}',N'{member.classroom}')")
+        cursor.execute(f"""insert into LIBCARDS (NAME, AGES, ADDRESS, CLASS) 
+                         values(N'{member.name}',{member.age},N'{member.address}',N'{member.classroom}')""")
         cursor.commit()
         return render(request, "MemberAdd.html", {})
     else:
         return render(request, "MemberAdd.html", {})
+
 
 
