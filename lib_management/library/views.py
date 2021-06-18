@@ -1,7 +1,9 @@
 from django.shortcuts import render
+import library.models
 from library.models import *
 import pyodbc
 import datetime
+from django.http import HttpResponse
 conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'
                       'Server=ADMIN;' 
                       'Database=QLTV;'
@@ -80,6 +82,36 @@ def CardDetail(request, *args, **kwargs):
                                on BC.BOOK_ID = B.BOOK_ID""")
     result = cursor.fetchall()
     return render(request, 'CardDetail.html', {'CardDetail':result})
+
+def CardEdit(request, id_bc):
+
+    result = cursor.execute(f"""select BC.BORROWCARD_ID, LC.NAME, B.TITLE , BC.DUE_DATE, BC.RETURN_DATE
+                               from BORROWCARDS BC join LIBCARDS LC 
+                               on BC.LIBCARD_ID = LC.LIBCARD_ID 
+                               join BOOKS B
+                               on BC.BOOK_ID = B.BOOK_ID
+                               WHERE BC.BORROWCARD_ID = {id_bc}""")
+    result = cursor.fetchall()
+    result[0][-2] = result[0][-2].strftime("%Y-%m-%d")
+    result[0][-1] = result[0][-1].strftime("%Y-%m-%d")
+    if result[0][-1] == "1900-01-01":
+        result[0][-1] = ""
+    return render(request, 'CardEdit.html', {'CardDetail':result})
+
+def CardUpdate(request):
+    card = library.models.CardDetail()
+    card.BORROWCARD_ID = request.POST.get('bc_id')
+    card.NAME = request.POST.get('name')
+    card.TITLE = request.POST.get('title')
+    card.DUE_DATE = request.POST.get('due_date')
+    card.RETURN_DATE = request.POST.get('return_date')
+    if card.RETURN_DATE=="1900-01-01":
+        cursor.execute(f"""UPDATE BORROWCARDS SET RETURN_DATE = NULL WHERE BORROWCARD_ID = {card.BORROWCARD_ID}""")
+    else:
+        cursor.execute(f"""UPDATE BORROWCARDS SET RETURN_DATE = '{card.RETURN_DATE}' WHERE BORROWCARD_ID = {card.BORROWCARD_ID}""")
+    cursor.commit()
+
+    return CardEdit(request,card.BORROWCARD_ID)
 
 def MemberAdd(request, *args, **kwargs):
     member = Libcards()
