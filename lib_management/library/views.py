@@ -5,7 +5,7 @@ import pyodbc
 import datetime
 from django.http import HttpResponse
 conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'
-                      'Server=ADMIN;' 
+                      'Server=NHANCSER\ADMIN;' 
                       'Database=QLTV;'
                       'Trusted_Connection=yes;')
 cursor = conn.cursor()
