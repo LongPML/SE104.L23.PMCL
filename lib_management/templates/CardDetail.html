@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+        <head>
+                <title>Borrow Card Add</title>
+                <style>
+
+                        #AddTitle { 
+                                text-align: center; font-size: 50px;
+                        }
+
+                        td {text-align: center; vertical-align: middle;
+                        }
+                        tr {display: table-row; vertical-align: inherit; border-color: inherit;
+                        }
+                        table.center {margin-left: auto; margin-right: auto;
+                        }
+                </style>
+        </head>
+        <body>
+                {% include "navbar.html" %}
+                <div> 
+                        <br/><br/>
+                        <h1 id="AddTitle">Borrow Card Information</h1>
+                        <form method="POST">
+                        {% csrf_token %}
+                        <table border="1" width="80%" class="center">
+                                 <thead bgcolor="#ddd">
+                                        <tr>
+                                                <td>Borrow Card IDs</td>
+                                                <td>Student Names</td>
+                                                <td>Title of Books</td>
+                                                <td>Due Date</td>
+                                                <td>Return Date</td>
+                                                <td>Edit</td>
+                                        </tr>
+                                 </thead>
+                                 {% for card in CardDetail %}
+                                        
+                                        <tr>
+                                                <td>{{card.BORROWCARD_ID}}</td>
+                                                <td>{{card.NAME}}</td>
+                                                <td>{{card.TITLE}}</td>
+                                                <td>{{card.DUE_DATE}}</td>
+                                                <td>{{card.RETURN_DATE}}</td>
+                                                <td><a href="cardEdit/{{card.BORROWCARD_ID}}"><input type="button" value="Edit"></a></td>
+                                        </tr>
+                                {% endfor %}
+                        </table>
+                        </form>
+                </div>
+                {% include "footer.html" %}
+        </body>
+</html>

@@ -1,73 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" href="https://glitch.com/favicon.ico" />
-
-    <title>??ng nh?p</title>
-
-    <style>
-        #AddBox {
-            position: absolute;
-            width: 500px;
-            height: 400px;
-            text-align: center;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            border: 1px solid black;
-        }
-
-        #AddTitle {
-            text-align: center;
-            font-size: 50px;
-        }
-
-        #AddTable {
-            margin: 0 auto;
-            font-size: 20px;
-            border-spacing: 5px 15px;
-        }
-
-        #AddInput {
-            text-align: center;
-            margin: 0 auto;
-            font-size: 25px;
-            width: 400px;
-        }
-
-        #AddButton {
-            text-align: center;
-            font-size: 25px;
-        }
-    </style>
-
-
-
-</head>
-<body>
-    {% include "navbar.html" %}
-    <div id="AddBox">
-        <h1 id="AddTitle">??ng Nh?p</h1>
-        <form method="POST">
-            {% csrf_token %}
-            <table id="AddTable">
-                <tr>
-                    <td><input id="AddInput" name="id" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="ID" /></td>
-                </tr>
-                <tr>
-                    <td><input id="AddInput" name="password" type="text" placeholder="Password" /></td>
-                </tr>
-                <tr>
-                    <td><button id="DelButton" type="submit">Login</button></td>
-                </tr>
-
-
-            </table>
-        </form>
-    </div>
-    {% include "footer.html" %}
-</body>
+<html>
+        <head>
+                <title>Book Delete</title>
+                <style>
+                        #DelBox{
+                                position: absolute; width: 500px; height: 300px; text-align: center; left: 50%; top: 50%; transform: translate(-50%, -50%); border: 1px solid black; 
+                        }
+                        #DelTitle { 
+                                text-align: center; font-size: 50px;
+                        }
+                        #DelTable {
+                                margin: 0 auto; font-size: 20px; border-spacing: 5px 15px;
+                        }
+                        #DelInput {
+                                text-align: center; margin: 0 auto; font-size: 25px; width: 400px;
+                        }
+                        #DelButton {
+                                text-align: center; font-size: 25px;
+                        }
+                </style>
+        </head>
+        <body>
+                {% include "navbar.html" %}
+                <div id="DelBox"> 
+                        <h1 id="DelTitle">Book Information</h1>
+                        <form method="POST">
+                        <table id="DelTable">
+                                <tr>
+                                        <td><input id="DelInput" name="bookid" type="number" placeholder="Book ID"/></td>
+                                </tr>
+                                <tr>
+                                        <td><input id="DelInput" name="title" type="text" placeholder="Book Name" onkeyup="this.value = this.value.toUpperCase();"/></td>
+                                </tr>
+                                <tr>
+                                        <td><button id="DelButton" type="submit">Delete</button></td>
+                                </tr>
+                        </table>
+                        </form>
+                </div>
+                {% include "footer.html" %}
+        </body>
 </html>
