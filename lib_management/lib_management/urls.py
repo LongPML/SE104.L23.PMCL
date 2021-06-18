@@ -15,5 +15,6 @@ urlpatterns = [
     path('cardDetail',CardDetail),
     path('cardEdit/<int:id_bc>',CardEdit),
     path('cardEdit/cardUpdate',CardUpdate),
+    path('bookDetail',BookDetail),
     path('login/',Login),
 ]

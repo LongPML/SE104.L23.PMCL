@@ -46,5 +46,7 @@ BOOK_ID INT NOT NULL CONSTRAINT FK_B_A FOREIGN KEY REFERENCES BOOKS(BOOK_ID),
 CONSTRAINT PK_A_B PRIMARY KEY (AUTHOR_ID,BOOK_ID)
 )
 
+SET DATEFORMAT dmy
+
 --use QLTV EXEC sp_changedbowner 'sa' --dung de cap quyen owner cho database de ve diagram khi copy tu may nay qua may khac
 

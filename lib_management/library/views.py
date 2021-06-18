@@ -74,14 +74,24 @@ def CardAdd(request, *args, **kwargs):
         return render(request, "CardAdd.html", {})
 
 def CardDetail(request, *args, **kwargs):
+    if request.method=="POST":
+        key = request.POST.get("key")
+        search_result = cursor.execute(f"""select BC.BORROWCARD_ID, LC.NAME, B.TITLE , BC.DUE_DATE, BC.RETURN_DATE
+                                           from BORROWCARDS BC join LIBCARDS LC 
+                                           on BC.LIBCARD_ID = LC.LIBCARD_ID 
+                                           join BOOKS B
+                                           on BC.BOOK_ID = B.BOOK_ID
+                                           where LC.NAME like '%{key}%' or BC.BORROWCARD_ID like '%{key}%' or LC.LIBCARD_ID like '%{key}%'""")
+        return render(request, 'CardDetail.html', {'CardDetail':search_result})
 
-    result = cursor.execute(f"""select BC.BORROWCARD_ID, LC.NAME, B.TITLE , BC.DUE_DATE, BC.RETURN_DATE
-                               from BORROWCARDS BC join LIBCARDS LC 
-                               on BC.LIBCARD_ID = LC.LIBCARD_ID 
-                               join BOOKS B
-                               on BC.BOOK_ID = B.BOOK_ID""")
-    result = cursor.fetchall()
-    return render(request, 'CardDetail.html', {'CardDetail':result})
+    if request.method=="GET":
+        result = cursor.execute(f"""select BC.BORROWCARD_ID, LC.NAME, B.TITLE , BC.DUE_DATE, BC.RETURN_DATE
+                                   from BORROWCARDS BC join LIBCARDS LC 
+                                   on BC.LIBCARD_ID = LC.LIBCARD_ID 
+                                   join BOOKS B
+                                   on BC.BOOK_ID = B.BOOK_ID""")
+        result = cursor.fetchall()
+        return render(request, 'CardDetail.html', {'CardDetail':result})
 
 def CardEdit(request, id_bc):
 
@@ -93,9 +103,13 @@ def CardEdit(request, id_bc):
                                WHERE BC.BORROWCARD_ID = {id_bc}""")
     result = cursor.fetchall()
     result[0][-2] = result[0][-2].strftime("%Y-%m-%d")
-    result[0][-1] = result[0][-1].strftime("%Y-%m-%d")
-    if result[0][-1] == "1900-01-01":
+    
+    if result[0][-1] == None:
         result[0][-1] = ""
+    elif result[0][-1] == "1900-01-01":
+        result[0][-1] = ""
+    else:
+        result[0][-1] = result[0][-1].strftime("%Y-%m-%d")
     return render(request, 'CardEdit.html', {'CardDetail':result})
 
 def CardUpdate(request):
@@ -109,6 +123,9 @@ def CardUpdate(request):
         cursor.execute(f"""UPDATE BORROWCARDS SET RETURN_DATE = NULL WHERE BORROWCARD_ID = {card.BORROWCARD_ID}""")
     else:
         cursor.execute(f"""UPDATE BORROWCARDS SET RETURN_DATE = '{card.RETURN_DATE}' WHERE BORROWCARD_ID = {card.BORROWCARD_ID}""")
+        cursor.commit()
+        BOOK_ID = [i for i in cursor.execute(f"""SELECT BOOK_ID FROM BORROWCARDS WHERE BORROWCARD_ID = {card.BORROWCARD_ID}""")][0][0]
+        cursor.execute(f"""UPDATE BOOKS SET STATE = 1 WHERE BOOK_ID = {BOOK_ID}""")
     cursor.commit()
 
     return CardEdit(request,card.BORROWCARD_ID)
@@ -127,6 +144,24 @@ def MemberAdd(request, *args, **kwargs):
     else:
         return render(request, "MemberAdd.html", {})
 
+def BookDetail(request):
+
+    if request.method=="POST":
+        key = request.POST.get("key")
+        search_result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, B.POSITION, LC.NAME
+                                            FROM BOOKS B LEFT JOIN BORROWCARDS BC ON B.BOOK_ID = BC.BOOK_ID
+                                            LEFT JOIN LIBCARDS LC ON LC.LIBCARD_ID = BC.LIBCARD_ID
+                                            WHERE B.TITLE LIKE '%{key}%' OR B.BOOK_ID LIKE '%{key}%'""")
+        return render(request, "BookDetail.html", {'BookDetail':search_result})
+
+    if request.method=="GET":
+        result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, B.POSITION, LC.NAME
+                                    FROM BOOKS B LEFT JOIN BORROWCARDS BC ON B.BOOK_ID = BC.BOOK_ID
+                                    LEFT JOIN LIBCARDS LC ON LC.LIBCARD_ID = BC.LIBCARD_ID""")
+        result = cursor.fetchall()
+        return render(request, "BookDetail.html", {'BookDetail':result})
+
 def Login(request, *args, **kwargs):
         return render(request, "Login.html", {})
+
 
