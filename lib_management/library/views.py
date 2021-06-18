@@ -161,4 +161,7 @@ def BookDetail(request):
         result = cursor.fetchall()
         return render(request, "BookDetail.html", {'BookDetail':result})
 
+def Login(request, *args, **kwargs):
+        return render(request, "Login.html", {})
+
 

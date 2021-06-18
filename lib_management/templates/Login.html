@@ -3,7 +3,7 @@
 <head>
 
     <meta charset="utf-8" />
-    <title>Tìm sách</title>
+    <title>Đăng nhập</title>
 
     <style>
         #AddBox {
@@ -47,16 +47,20 @@
 <body>
     {% include "navbar.html" %}
     <div id="AddBox">
-        <h1 id="AddTitle">Tìm sách</h1>
+        <h1 id="AddTitle">Đăng Nhập</h1>
         <form method="POST">
             {% csrf_token %}
             <table id="AddTable">
                 <tr>
-                    <td><input id="AddInput" name="title" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Nhập tên sách" /></td>
+                    <td><input id="AddInput" name="id" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="ID" /></td>
                 </tr>
                 <tr>
-                    <td><button id="AddButton" type="submit">Find</button></td>
+                    <td><input id="AddInput" name="password" type="text" placeholder="Password" /></td>
                 </tr>
+                <tr>
+                    <td><button id="DelButton" type="submit">Login</button></td>
+                </tr>
+
 
             </table>
         </form>
