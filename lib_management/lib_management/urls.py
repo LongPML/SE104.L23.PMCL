@@ -14,5 +14,6 @@ urlpatterns = [
     path('member/add', MemberAdd),
     path('cardDetail',CardDetail),
     path('cardEdit/<int:id_bc>',CardEdit),
-    path('cardEdit/cardUpdate',CardUpdate)
+    path('cardEdit/cardUpdate',CardUpdate),
+    path('login/',Login),
 ]

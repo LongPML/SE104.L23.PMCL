@@ -127,5 +127,6 @@ def MemberAdd(request, *args, **kwargs):
     else:
         return render(request, "MemberAdd.html", {})
 
-
+def Login(request, *args, **kwargs):
+        return render(request, "Login.html", {})
 
