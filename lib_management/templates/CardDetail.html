@@ -19,6 +19,7 @@
         <body>
                 {% include "navbar.html" %}
                 <div> 
+                        <br/><br/>
                         <h1 id="AddTitle">Borrow Card Information</h1>
                         <form method="POST">
                         {% csrf_token %}
@@ -41,7 +42,7 @@
                                                 <td>{{card.TITLE}}</td>
                                                 <td>{{card.DUE_DATE}}</td>
                                                 <td>{{card.RETURN_DATE}}</td>
-                                                <td><input type="button" value="Edit"></td>
+                                                <td><a href="cardEdit/{{card.BORROWCARD_ID}}"><input type="button" value="Edit"></a></td>
                                         </tr>
                                 {% endfor %}
                         </table>

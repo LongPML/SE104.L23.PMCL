@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+        <head>
+                <title>Borrow Card Add</title>
+                <style>
+                        #AddBox{
+                                position: absolute; width: 1000px; height: 400px; text-align: center; left: 50%; top: 50%; transform: translate(-50%, -50%); border: 1px solid black; 
+                        }
+                        #AddTitle { 
+                                text-align: center; font-size: 50px;
+                        }
+
+                        td {text-align: center; vertical-align: left; font-size: 30px
+                        }
+                        tr {display: table-row; vertical-align: inherit; border-color: inherit;
+                        }
+                        table.center {margin-left: auto; margin-right: auto;
+                        }
+                        input.td{
+                            text-align: center; font-size: 25px; width: 400px; height: 28px
+                        }
+                        input.normal {
+                            text-align: center; font-size: 25px; width: 150px; height: 35px
+                        }
+                        input.back {
+                            text-align: center; font-size: 25px; width: 200px; height: 35px
+                        }
+                </style>
+        </head>
+        <body>
+                {% include "navbar.html" %}
+                <div> 
+                    <br/><br/>
+                        <h1 id="AddTitle">Borrow Card Information</h1>
+                        <br/><br/>
+                        <form method="POST" action="cardUpdate">
+                        {% for card in CardDetail %}
+                            {% csrf_token %}
+
+                        <table border="0" width="50%" class="center">
+                            
+                                        <tr>
+                                                <td>Borrow Card IDs</td>
+                                                <td><input class="td" type="number" name="bc_id" value="{{card.BORROWCARD_ID}}" readonly></td>
+                                        </tr>
+                                        <tr>
+                                                <td>Student Names</td>
+                                                <td><input class="td" type="text" name="name" value="{{card.NAME}}" readonly></td>
+                                        </tr>
+                                        <tr>
+                                                <td>Title of Books</td>
+                                                <td><input class="td" type="text" name="title" value="{{card.TITLE}}" readonly></td>
+                                        </tr>   
+                                        <tr>
+                                                <td>Due Date</td>
+                                                <td><input class="td" type="date" name="due_date" value="{{card.DUE_DATE}}" readonly></td>
+                                        </tr>
+                                                <td>Return Date</td>
+                                                <td><input class="td" type="date" name="return_date" value="{{card.RETURN_DATE}}"></td>
+                                        </tr>
+                                                                        
+                        </table>
+                        {% endfor %}
+                        <br/><br/><br/><br/>
+                        <center>
+                            <div>
+                                <!-- <input class="back" type=button value="Previous Page" onClick="javascript:history.go(-2);"> -->
+                                <input class="normal" type="submit" value="Update" onclick="return alert('Update successfully!')">
+                            </div>
+                            
+                        </center>
+                        </form>
+                        
+
+                        
+                </div>
+                {% include "footer.html" %}
+        </body>
+</html>
