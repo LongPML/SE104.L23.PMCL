@@ -37,4 +37,10 @@ class CardDetail(models.Model):
 	DUE_DATE = models.DateField()
 	RETURN_DATE = models.DateField()
 
+class BookDetail(models.Model):
+	BOOK_ID = models.IntegerField()
+	TITLE = models.CharField(max_length=30)
+	NAME = models.CharField(max_length=30)
+	POSITION = models.CharField(max_length=10)
+
 

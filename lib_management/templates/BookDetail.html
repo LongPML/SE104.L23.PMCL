@@ -26,41 +26,35 @@
                 {% include "navbar.html" %}
                 <div> 
                         <br/><br/>
-                        <h1 id="AddTitle">Borrow Card Information</h1>
-
+                        <h1 id="AddTitle">Book Information</h1>
                         <form method="POST">
                             {% csrf_token %}
                             <center>
                                 <div>
-                                    <input class="typesearch" type="text" name="key" placeholder="Enter Name or Library Card's ID" onkeyup="this.value = this.value.toUpperCase();">
+                                    <input class="typesearch" type="text" name="key" placeholder="Enter Title or Book's ID" onkeyup="this.value = this.value.toUpperCase();">
                                     <input type="submit" value="Search">
                                 </div>
                             </center>
                         </form>
-
-                        <br/> <br/>
+                        <br/><br/>
                         <form method="GET">
-                        
+                        {% csrf_token %}
                         <table border="1" width="80%" class="center">
                                  <thead bgcolor="#ddd">
                                         <tr>
-                                                <td>Borrow Card IDs</td>
-                                                <td>Student Names</td>
-                                                <td>Title of Books</td>
-                                                <td>Due Date</td>
-                                                <td>Return Date</td>
-                                                <td>Edit</td>
+                                                <td>Book IDs</td>
+                                                <td>Title</td>
+                                                <td>Borrower</td>
+                                                <td>Position</td>
                                         </tr>
                                  </thead>
-                                 {% for card in CardDetail %}
+                                 {% for book in BookDetail %}
                                         
                                         <tr>
-                                                <td>{{card.BORROWCARD_ID}}</td>
-                                                <td>{{card.NAME}}</td>
-                                                <td>{{card.TITLE}}</td>
-                                                <td>{{card.DUE_DATE}}</td>
-                                                <td>{{card.RETURN_DATE}}</td>
-                                                <td><a href="cardEdit/{{card.BORROWCARD_ID}}"><input type="button" value="Edit"></a></td>
+                                                <td>{{book.BOOK_ID}}</td>
+                                                <td>{{book.TITLE}}</td>
+                                                <td>{{book.NAME}}</td>
+                                                <td>{{book.POSITION}}</td>
                                         </tr>
                                 {% endfor %}
                         </table>
