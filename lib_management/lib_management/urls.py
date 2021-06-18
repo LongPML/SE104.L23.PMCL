@@ -12,4 +12,5 @@ urlpatterns = [
     path('book/delete', BookDelete),
     path('card/add', CardAdd),
     path('member/add', MemberAdd),
+    path('login/',Login),
 ]

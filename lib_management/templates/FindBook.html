@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="https://glitch.com/favicon.ico" />
 
-    <title>??ng nh?p</title>
+    <title>Tìm sách</title>
 
     <style>
         #AddBox {
@@ -50,20 +50,16 @@
 <body>
     {% include "navbar.html" %}
     <div id="AddBox">
-        <h1 id="AddTitle">??ng Nh?p</h1>
+        <h1 id="AddTitle">Tìm sách</h1>
         <form method="POST">
             {% csrf_token %}
             <table id="AddTable">
                 <tr>
-                    <td><input id="AddInput" name="id" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="ID" /></td>
+                    <td><input id="AddInput" name="title" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Nhập tên sách" /></td>
                 </tr>
                 <tr>
-                    <td><input id="AddInput" name="password" type="text" placeholder="Password" /></td>
+                    <td><button id="AddButton" type="submit">Find</button></td>
                 </tr>
-                <tr>
-                    <td><button id="DelButton" type="submit">Login</button></td>
-                </tr>
-
 
             </table>
         </form>
