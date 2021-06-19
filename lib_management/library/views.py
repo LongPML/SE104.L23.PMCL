@@ -5,7 +5,8 @@ import pyodbc
 import datetime
 from django.http import HttpResponse
 conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'
-                      'Server=NHANCSER\ADMIN;' 
+                      # 'Server=NHANCSER\ADMIN;' 
+                      'Server=ADMIN;'
                       'Database=QLTV;'
                       'Trusted_Connection=yes;')
 cursor = conn.cursor()
@@ -124,7 +125,8 @@ def CardUpdate(request):
     else:
         cursor.execute(f"""UPDATE BORROWCARDS SET RETURN_DATE = '{card.RETURN_DATE}' WHERE BORROWCARD_ID = {card.BORROWCARD_ID}""")
         cursor.commit()
-        BOOK_ID = [i for i in cursor.execute(f"""SELECT BOOK_ID FROM BORROWCARDS WHERE BORROWCARD_ID = {card.BORROWCARD_ID}""")][0][0]
+        # BOOK_ID = [i for i in cursor.execute(f"""SELECT BOOK_ID FROM BORROWCARDS WHERE BORROWCARD_ID = {card.BORROWCARD_ID}""")][0][0]
+        BOOK_ID = cursor.execute(f"""SELECT BOOK_ID FROM BORROWCARDS WHERE BORROWCARD_ID = {card.BORROWCARD_ID}""").fetchall()[0][0]
         cursor.execute(f"""UPDATE BOOKS SET STATE = 1 WHERE BOOK_ID = {BOOK_ID}""")
     cursor.commit()
 
@@ -132,17 +134,30 @@ def CardUpdate(request):
 
 def MemberAdd(request, *args, **kwargs):
     member = Libcards()
-    member.name = request.POST.get('name')
-    member.age = request.POST.get('age')
-    member.address = request.POST.get('address')
-    member.classroom = request.POST.get('class')
-    if member.name != None and member.age != None and member.address != None and member.classroom != None:
+    member.NAME = request.POST.get('name')
+    member.AGES = request.POST.get('age')
+    member.ADDRESS = request.POST.get('address')
+    member.CLASS = request.POST.get('class')
+    if member.NAME != None and member.AGES != None and member.ADDRESS != None and member.CLASS != None:
         cursor.execute(f"""insert into LIBCARDS (NAME, AGES, ADDRESS, CLASS) 
-                         values(N'{member.name}',{member.age},N'{member.address}',N'{member.classroom}')""")
+                         values(N'{member.NAME}',{member.AGES},N'{member.ADDRESS}',N'{member.CLASS}')""")
         cursor.commit()
         return render(request, "MemberAdd.html", {})
     else:
         return render(request, "MemberAdd.html", {})
+
+def MemberDetail(request):
+    if request.method=="POST":
+        key = request.POST.get("key")
+        search_result = cursor.execute(f"""select * from LIBCARDS
+                                           where NAME like '%{key}%' or LIBCARD_ID like '%{key}%'""")
+        return render(request, 'MemberDetail.html', {'Libcards':search_result})
+
+    if request.method=="GET":
+        result = cursor.execute(f"""select * from LIBCARDS""")
+        result = cursor.fetchall()
+        return render(request, 'memberDetail.html', {'Libcards':result})
+
 
 def BookDetail(request):
 
@@ -162,6 +177,12 @@ def BookDetail(request):
         return render(request, "BookDetail.html", {'BookDetail':result})
 
 def Login(request, *args, **kwargs):
-        return render(request, "Login.html", {})
+    username = request.POST.get("username")
+    password = request.POST.get("password")
+    match = cursor.execute(f"""select PASSWORD from ACCOUNT WHERE USERNAME = 'ADMIN'""").fetchall()[0][0]
+    if password == match:
+        # chờ Nhân làm trang Admin Home điền vô
+        pass
+    return render(request, "Login.html", {})
 
 

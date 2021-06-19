@@ -17,11 +17,11 @@ class Subjects(models.Model):
 	name = models.CharField(max_length=30)
 
 class Libcards(models.Model):
-	id = models.IntegerField(primary_key=True)
-	name = models.CharField(max_length=30)
-	age = models.IntegerField()
-	address = models.CharField(max_length=100)
-	classoom = models.CharField(max_length=15)
+	LIBCARD_ID = models.IntegerField(primary_key=True)
+	NAME = models.CharField(max_length=30)
+	AGES = models.IntegerField()
+	ADDRESS = models.CharField(max_length=100)
+	CLASS = models.CharField(max_length=15)
 
 class Borrowcards(models.Model):
 	bookid = models.IntegerField()
