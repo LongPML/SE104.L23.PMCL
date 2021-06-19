@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+        <head>
+                <title>Borrow Card Add</title>
+                <style>
+
+                        #AddTitle { 
+                                text-align: center; font-size: 50px;
+                        }
+
+                        td {text-align: center; vertical-align: middle;
+                        }
+                        tr {display: table-row; vertical-align: inherit; border-color: inherit;
+                        }
+                        table.center {margin-left: auto; margin-right: auto;
+                        }
+                        input{
+                            font-size: 20px
+                        }
+                        input.typesearch{
+                            font-size: 20px; width: 500px;text-align: center;
+                        }
+                </style>
+        </head>
+        <body>
+                {% include "navbar.html" %}
+                <div> 
+                        <br/><br/>
+                        <h1 id="AddTitle">Library Card Information</h1>
+
+                        <form method="POST">
+                            {% csrf_token %}
+                            <center>
+                                <div>
+                                    <input class="typesearch" type="text" name="key" placeholder="Enter Name or Library Card's ID" onkeyup="this.value = this.value.toUpperCase();">
+                                    <input type="submit" value="Search">
+                                </div>
+                            </center>
+                        </form>
+
+                        <br/> <br/>
+                        <form method="GET">
+                        
+                        <table border="1" width="80%" class="center">
+                                 <thead bgcolor="#ddd">
+                                        <tr>
+                                                <td>Library Card ID</td>
+                                                <td>Student Names</td>
+                                                <td>Ages</td>
+                                                <td>Address</td>
+                                                <td>Class</td>
+                                        </tr>
+                                 </thead>
+                                 {% for member in Libcards %}
+                                        
+                                        <tr>
+                                                <td>{{member.LIBCARD_ID}}</td>
+                                                <td>{{member.NAME}}</td>
+                                                <td>{{member.AGES}}</td>
+                                                <td>{{member.ADDRESS}}</td>
+                                                <td>{{member.CLASS}}</td></td>
+                                        </tr>
+                                {% endfor %}
+                        </table>
+                        </form>
+                </div>
+                {% include "footer.html" %}
+        </body>
+</html>
