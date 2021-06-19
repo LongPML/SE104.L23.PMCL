@@ -4,7 +4,7 @@
                 <title>Borrow Card Add</title>
                 <style>
                         #AddBox{
-                                position: absolute; width: 1000px; height: 400px; text-align: center; left: 50%; top: 50%; transform: translate(-50%, -50%); border: 1px solid black; 
+                                position: absolute; width: 700px; height: 400px; text-align: center; left: 50%; top: 50%; transform: translate(-50%, -50%); border: 1px solid black; 
                         }
                         #AddTitle { 
                                 text-align: center; font-size: 50px;
@@ -28,16 +28,20 @@
                         {% csrf_token %}
                         <table id="AddTable">
                                 <tr>
-                                        <td><input id="AddInput" type="number" placeholder="Borrow Card ID"/></td>
+                                        <td><label for="BookID">Book ID</label></td>
                                         <td><input id="AddInput" type="number" name="bookid" placeholder="Book ID"/></td>
                                 </tr>
                                 <tr>
+                                        <td><label for="BorrowDate">Borrow Date</label></td>
                                         <td><input id="AddInput" type="date" name="borrow_date" placeholder="Borrow Date" value="" /></td>
+                                </tr>
+                                <tr>        
+                                        <td><label for="DueDate">Due Date</label></td>
                                         <td><input id="AddInput" type="date" name="due_date" placeholder="Due Date" value="" /></td>
                                 </tr>
                                 <tr>
+                                        <td><label for="MemberID">Member ID</label></td>
                                         <td><input id="AddInput" type="number" name="libcardid" placeholder="Member ID"/></td>
-                                        <td><input id="AddInput" type="date" name="return_date" placeholder="Return Date" value="" /></td>
                                 </tr>
                                 <tr>
                                         <td></td>

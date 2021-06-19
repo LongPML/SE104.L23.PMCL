@@ -54,8 +54,8 @@ def BookAdd(request, *args, **kwargs):
     else:
         return render(request, "BookAdd.html", {})
 
-def BookDelete(request, *args, **kwargs):
-        return render(request, "BookDelete.html", {})
+def BookUpdate(request, *args, **kwargs):
+        return render(request, "BookUpdate.html", {})
 
 def CardAdd(request, *args, **kwargs):
     card = Borrowcards()

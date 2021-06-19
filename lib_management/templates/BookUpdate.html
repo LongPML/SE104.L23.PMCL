@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+        <head>
+                <meta charset="UTF-8" />
+                <title>Book Update</title>
+                <style>
+                        #UpdateBox{
+                                position: absolute; width: 600px; height: 500px; text-align: center; left: 50%; top: 50%; transform: translate(-50%, -50%); border: 1px solid black; 
+                        }
+                        #UpdateTitle { 
+                                text-align: center; font-size: 50px;
+                        }
+                        #UpdateTable {
+                                margin: 0 auto; font-size: 20px; border-spacing: 5px 15px;
+                        }
+                        #UpdateInput {
+                                text-align: center; margin: 0 auto; font-size: 25px; width: 400px;
+                        }
+                        #UpdateButton {
+                                text-align: center; font-size: 25px;
+                        }
+                </style>
+        </head>
+        <body>
+                {% include "navbar.html" %}
+                <div id="UpdateBox"> 
+                        <h1 id="UpdateTitle">Book Information</h1>
+                        <form method="POST">
+                        {% csrf_token %}  
+                        <table id="UpdateTable">
+                                <tr>
+                                        <td><input id="UpdateInput" name="ID" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Book ID"/></td>
+                                </tr>
+                                <tr>
+                                        <td><input id="UpdateInput" name="title" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Book Name"/></td>
+                                </tr>
+                                <tr>
+                                        <td><input id="UpdateInput" name="authorname" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Author"/></td>
+                                </tr>
+                                <tr>
+                                        <td><input id="UpdateInput" name="subjectname" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Topic"/></td>
+                                </tr>
+                                <tr>
+                                        <td><input id="UpdateInput" name="position" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Position"/></td>
+                                </tr>
+                                <tr>
+                                        <td><input id="UpdateInput" name="state" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="State"/></td>
+                                </tr>
+                                <tr>
+                                        <td><button id="UpdateButton" type="submit" onclick="return alert('Update Book Successfully!')">Update</button></td>
+                                </tr>
+                        </table>
+                        </form>
+                </div>
+                {% include "footer.html" %}
+        </body>
+</html>
