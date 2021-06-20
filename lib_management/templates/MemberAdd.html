@@ -2,6 +2,8 @@
 <html>
         <head>
                 <title>Member Add</title>
+                <link rel="stylesheet" href="/assets/css/style.css">
+                
                 <style>
                         #AddBox{
                                 position: absolute; width: 500px; height: 400px; text-align: center; left: 50%; top: 50%; transform: translate(-50%, -50%); border: 1px solid black; 
@@ -21,7 +23,7 @@
                 </style>
         </head>
         <body>
-                {% include "navbar.html" %}
+                {% include "admin-header.html" %}
                 <div id="AddBox"> 
                         <h1 id="AddTitle">Member Information</h1>
                         <form method="POST">
