@@ -44,8 +44,12 @@
                                         <tr>
                                                 <td>Book IDs</td>
                                                 <td>Title</td>
+                                                <td>Author</td>
+                                                <td>Subject</td>
                                                 <td>Borrower</td>
                                                 <td>Position</td>
+                                                <td>State</td>
+                                                <td>Edit</td>
                                         </tr>
                                  </thead>
                                  {% for book in BookDetail %}
@@ -53,8 +57,12 @@
                                         <tr>
                                                 <td>{{book.BOOK_ID}}</td>
                                                 <td>{{book.TITLE}}</td>
+                                                <td>{{book.AUTHOR}}</td>
+                                                <td>{{book.SUBJECT}}</td>
                                                 <td>{{book.NAME}}</td>
                                                 <td>{{book.POSITION}}</td>
+                                                <td>{{book.STATE}}</td>
+                                                <td><a href="bookEdit/{{book.BOOK_ID}}"><input type="button" value="Edit"></a></td>
                                         </tr>
                                 {% endfor %}
                         </table>

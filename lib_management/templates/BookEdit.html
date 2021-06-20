@@ -5,7 +5,7 @@
                 <title>Book Update</title>
                 <style>
                         #UpdateBox{
-                                position: absolute; width: 600px; height: 500px; text-align: center; left: 50%; top: 50%; transform: translate(-50%, -50%); border: 1px solid black; 
+                                position: absolute; width: 600px; height: 550px; text-align: center; left: 50%; top: 50%; transform: translate(-50%, -50%); border: 1px solid black; 
                         }
                         #UpdateTitle { 
                                 text-align: center; font-size: 50px;
@@ -25,32 +25,37 @@
                 {% include "navbar.html" %}
                 <div id="UpdateBox"> 
                         <h1 id="UpdateTitle">Book Information</h1>
-                        <form method="POST">
-                        {% csrf_token %}  
+                        {% for book in BookDetail %} 
+                        <form method="POST" action="bookUpdate">
+                        {% csrf_token %}
                         <table id="UpdateTable">
                                 <tr>
-                                        <td><input id="UpdateInput" name="ID" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Book ID"/></td>
+                                        <td><input id="UpdateInput" name="ID" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Book ID" value="{{book.BOOK_ID}}" readonly /></td>
                                 </tr>
                                 <tr>
-                                        <td><input id="UpdateInput" name="title" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Book Name"/></td>
+                                        <td><input id="UpdateInput" name="title" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Book Name" value="{{book.TITLE}}" readonly/></td>
                                 </tr>
                                 <tr>
-                                        <td><input id="UpdateInput" name="authorname" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Author"/></td>
+                                        <td><input id="UpdateInput" name="authorname" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Author" value="{{book.AUTHOR}}" readonly/></td>
                                 </tr>
                                 <tr>
-                                        <td><input id="UpdateInput" name="subjectname" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Topic"/></td>
+                                        <td><input id="UpdateInput" name="subjectname" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Topic" value="{{book.SUBJECT}}" readonly></td>
                                 </tr>
                                 <tr>
-                                        <td><input id="UpdateInput" name="position" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Position"/></td>
+                                        <td><input id="UpdateInput" name="name" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Borrower" value="{{book.NAME}}" readonly></td>
                                 </tr>
                                 <tr>
-                                        <td><input id="UpdateInput" name="state" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="State"/></td>
+                                        <td><input id="UpdateInput" name="position" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Position" value="{{book.POSITION}}" /></td>
+                                </tr>
+                                <tr>
+                                        <td><input id="UpdateInput" name="state" type="number" onkeyup="this.value = this.value.toUpperCase();" placeholder="State" value="{{book.STATE}}" /></td>
                                 </tr>
                                 <tr>
                                         <td><button id="UpdateButton" type="submit" onclick="return alert('Update Book Successfully!')">Update</button></td>
                                 </tr>
                         </table>
                         </form>
+                        {% endfor %}
                 </div>
                 {% include "footer.html" %}
         </body>
