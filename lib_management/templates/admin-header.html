@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div id="main">
+        <div id="header">
+            <!-- Begin: Nav -->
+            <ul id="nav">
+                <div class="logo">
+                    <a href="/"><img src="https://ordasvit.com/joomla-amazon/images/Logo_amazon2.png" alt="Logo" style="width: 150px; height: 34px" ></a>
+                </div>
+                <li><a href="/">Home</a></li>
+                <li>
+                    <a href="">
+                        Admin
+                        <i class="nav-sort-down fa fa-sort-down"></i>
+                    </a>
+                    <ul class="subnav">
+                        <li><a href="/book/add">Add Book</a></li>
+                        <li><a href="">Delete Book</a></li>
+                        <li><a href="/card/add">Create Call Card</a></li>
+                        <li><a href="">View Library Card</a></li>
+                        <li><a href="">View Library Book</a></li>
+                        <li><a href="/cardDetail">View Call Card</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+            <!-- End: Nav -->
+
+            <!-- Begin: Search Book -->
+            <div class="search-book">
+                <input class="search-text" type="text" placeholder="Search books">
+                <div class="search_btn_block">
+                    <input class="search_btn" type="submit" value="SEARCH">
+                </div>
+            </div>
+            <!-- End: Search Book -->
+
+            <!-- Begin: Login -->
+            <div class="login-form">
+                <a href="/login">
+                    <button class="button-login">LOGOUT</button>
+                </a>
+            </div>
+            <!-- End: Login -->
+    </div>
+</body>
+</html>

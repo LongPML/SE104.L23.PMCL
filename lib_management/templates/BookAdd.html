@@ -3,6 +3,8 @@
         <head>
                 <meta charset="UTF-8" />
                 <title>Book Add</title>
+                <link rel="stylesheet" href="/static/assets/css/style.css">
+
                 <style>
                         #AddBox{
                                 position: absolute; width: 500px; height: 400px; text-align: center; left: 50%; top: 50%; transform: translate(-50%, -50%); border: 1px solid black; 
@@ -22,7 +24,7 @@
                 </style>
         </head>
         <body>
-                {% include "navbar.html" %}
+                {% include "admin-header.html" %}
                 <div id="AddBox"> 
                         <h1 id="AddTitle">Book Information</h1>
                         <form method="POST">
@@ -46,6 +48,5 @@
                         </table>
                         </form>
                 </div>
-                {% include "footer.html" %}
         </body>
 </html>
