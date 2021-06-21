@@ -3,6 +3,8 @@
         <head>
                 <meta charset="UTF-8" />
                 <title>Book Update</title>
+                <link rel="stylesheet" href="/assets/css/style.css">
+                
                 <style>
                         #UpdateBox{
                                 position: absolute; width: 600px; height: 550px; text-align: center; left: 50%; top: 50%; transform: translate(-50%, -50%); border: 1px solid black; 
@@ -22,7 +24,7 @@
                 </style>
         </head>
         <body>
-                {% include "navbar.html" %}
+                {% include "admin-header.html" %}
                 <div id="UpdateBox"> 
                         <h1 id="UpdateTitle">Book Information</h1>
                         {% for book in BookDetail %} 
