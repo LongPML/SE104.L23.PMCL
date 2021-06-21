@@ -54,8 +54,29 @@ def BookAdd(request, *args, **kwargs):
     else:
         return render(request, "BookAdd.html", {})
 
-def BookUpdate(request, *args, **kwargs):
-        return render(request, "BookUpdate.html", {})
+def BookEdit(request, id_b):
+    result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE
+                                FROM BOOKS B     
+                                JOIN AUTHORS_BOOKS AB
+                                ON B.BOOK_ID = AB.BOOK_ID JOIN AUTHORS A
+                                ON AB.AUTHOR_ID  = A.AUTHOR_ID
+                                JOIN SUBJECTS_BOOKS SB
+                                ON B.BOOK_ID = SB.BOOK_ID JOIN SUBJECTS S
+                                ON SB.SUBJECT_ID = S.SUBJECT_ID
+                                LEFT JOIN BORROWCARDS BC 
+                                ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
+                                ON BC.LIBCARD_ID = LC.LIBCARD_ID
+                                WHERE B.BOOK_ID = {id_b}""")
+    result = cursor.fetchall()
+    return render(request, "BookEdit.html", {'BookDetail':result})
+
+def BookUpdate(request):
+    bookid = request.POST.get("ID")
+    position = request.POST.get("position")
+    state = request.POST.get("state")
+    cursor.execute(f"""UPDATE BOOKS SET STATE = {state}, POSITION = '{position}' WHERE BOOK_ID = {bookid}""")
+    cursor.commit()
+    return BookEdit(request, bookid)
 
 def CardAdd(request, *args, **kwargs):
     card = Borrowcards()
@@ -82,7 +103,7 @@ def CardDetail(request, *args, **kwargs):
                                            on BC.LIBCARD_ID = LC.LIBCARD_ID 
                                            join BOOKS B
                                            on BC.BOOK_ID = B.BOOK_ID
-                                           where LC.NAME like '%{key}%' or BC.BORROWCARD_ID like '%{key}%' or LC.LIBCARD_ID like '%{key}%'""")
+                                           where LC.NAME like N'%{key}%' or BC.BORROWCARD_ID like '%{key}%' or LC.LIBCARD_ID like '%{key}%'""")
         return render(request, 'CardDetail.html', {'CardDetail':search_result})
 
     if request.method=="GET":
@@ -163,16 +184,32 @@ def BookDetail(request):
 
     if request.method=="POST":
         key = request.POST.get("key")
-        search_result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, B.POSITION, LC.NAME
-                                            FROM BOOKS B LEFT JOIN BORROWCARDS BC ON B.BOOK_ID = BC.BOOK_ID
-                                            LEFT JOIN LIBCARDS LC ON LC.LIBCARD_ID = BC.LIBCARD_ID
-                                            WHERE B.TITLE LIKE '%{key}%' OR B.BOOK_ID LIKE '%{key}%'""")
+        search_result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE
+                                    FROM BOOKS B     
+                                    JOIN AUTHORS_BOOKS AB
+                                    ON B.BOOK_ID = AB.BOOK_ID JOIN AUTHORS A
+                                    ON AB.AUTHOR_ID  = A.AUTHOR_ID
+                                    JOIN SUBJECTS_BOOKS SB
+                                    ON B.BOOK_ID = SB.BOOK_ID JOIN SUBJECTS S
+                                    ON SB.SUBJECT_ID = S.SUBJECT_ID
+                                    LEFT JOIN BORROWCARDS BC 
+                                    ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
+                                    ON BC.LIBCARD_ID = LC.LIBCARD_ID
+                                    WHERE B.BOOK_ID LIKE '%{key}%' or A.NAME LIKE N'%{key}%' OR S.NAME LIKE N'%{key}%' or B.TITLE LIKE N'%{key}%'""")
         return render(request, "BookDetail.html", {'BookDetail':search_result})
 
     if request.method=="GET":
-        result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, B.POSITION, LC.NAME
-                                    FROM BOOKS B LEFT JOIN BORROWCARDS BC ON B.BOOK_ID = BC.BOOK_ID
-                                    LEFT JOIN LIBCARDS LC ON LC.LIBCARD_ID = BC.LIBCARD_ID""")
+        result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE
+                                    FROM BOOKS B     
+                                    JOIN AUTHORS_BOOKS AB
+                                    ON B.BOOK_ID = AB.BOOK_ID JOIN AUTHORS A
+                                    ON AB.AUTHOR_ID  = A.AUTHOR_ID
+                                    JOIN SUBJECTS_BOOKS SB
+                                    ON B.BOOK_ID = SB.BOOK_ID JOIN SUBJECTS S
+                                    ON SB.SUBJECT_ID = S.SUBJECT_ID
+                                    LEFT JOIN BORROWCARDS BC 
+                                    ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
+                                    ON BC.LIBCARD_ID = LC.LIBCARD_ID""")
         result = cursor.fetchall()
         return render(request, "BookDetail.html", {'BookDetail':result})
 
