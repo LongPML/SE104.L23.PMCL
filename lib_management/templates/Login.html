@@ -51,9 +51,10 @@
         <h1 style="font-family: 'Roboto Condensed', monospace; font-size: 50px; color: #4E5A64; margin: 20px 0 10px;">Login</h1>
         <h4 style="font-family: 'Roboto Condensed', monospace; font-size: 20px; color: #4E5A64; margin: 10px 0;">Library Management System</h4>
         <div  style="margin-top: 60px;">
-          <form style="display: flex; flex-direction: column;">
+          <form method="POST" style="display: flex; flex-direction: column;">
+            {% csrf_token %}
             <input class="username" name="username" type="text" onkeyup="this.vale = this.value.toUpperCase()" placeholder="Username"/>
-            <input class="passwork" name="password" placeholder="Password"/>
+            <input class="passwork" name="password" type="password" placeholder="Password"/>
             <div style="text-align: end">
               <input class="login-btn" type="submit" value="Login" />
             </div>

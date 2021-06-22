@@ -6,7 +6,7 @@ import datetime
 from django.http import HttpResponse
 conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'
                       'Server=NHANCSER\ADMIN;' 
-                    #   'Server=ADMIN;'
+                      # 'Server=ADMIN;'
                       'Database=QLTV;'
                       'Trusted_Connection=yes;')
 cursor = conn.cursor()
@@ -212,10 +212,10 @@ def BookDetail(request):
 def Login(request, *args, **kwargs):
     username = request.POST.get("username")
     password = request.POST.get("password")
-    match = cursor.execute(f"""select PASSWORD from ACCOUNT WHERE USERNAME = 'ADMIN'""").fetchall()[0][0]
-    if password == match:
-        # chờ Nhân làm trang Admin Home điền vô
-        pass
+    if username != None and password != None:
+        match = cursor.execute(f"""select PASSWORD from ACCOUNT WHERE USERNAME = '{username}'""").fetchall()[0][0]
+        if password == match:
+            return admin_home(request)
     return render(request, "Login.html", {})
 
 
