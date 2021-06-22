@@ -89,6 +89,9 @@ html {
 
 #nav .nav-sort-down {
     font-size: 14px;
+    padding: 0;
+    margin: 0;
+    width: 20px;
 }
 
 .search-book {
