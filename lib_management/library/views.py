@@ -5,8 +5,8 @@ import pyodbc
 import datetime
 from django.http import HttpResponse
 conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'
-                      # 'Server=NHANCSER\ADMIN;' 
-                      'Server=ADMIN;'
+                      'Server=NHANCSER\ADMIN;' 
+                    #   'Server=ADMIN;'
                       'Database=QLTV;'
                       'Trusted_Connection=yes;')
 cursor = conn.cursor()
@@ -15,13 +15,9 @@ def home_view(request, *args, **kwargs):
     print(request.user)
     return render(request, "index.html", {})
 
-def search_book(request, *args, **kwargs):
+def admin_home(request, *args, **kwargs):
     print(request.user)
-    return render(request, "searchbook.html", {})
-
-def admin_login(request, *args, **kwargs):
-    print(request.user)
-    return render(request, "adminlogin.html", {})
+    return render(request, "admin-home.html", {})
 
 def BookAdd(request, *args, **kwargs):
     Book = Books()
