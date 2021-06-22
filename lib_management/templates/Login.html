@@ -1,70 +1,64 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 
     <meta charset="utf-8" />
-    <title>Đăng nhập</title>
+    <title>Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,400;1,300;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
 
     <style>
-        #AddBox {
-            position: absolute;
-            width: 500px;
-            height: 400px;
-            text-align: center;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            border: 1px solid black;
-        }
+      .image {
+        object-fit: cover;
+        object-position: center;
+        width: 100%;
+        height: 100%;
+      }
 
-        #AddTitle {
-            text-align: center;
-            font-size: 50px;
-        }
+      .username {
+        border: none;
+        outline: none;
+        border-bottom: 1px solid #4E5A64;
+        padding: 15px 0;
+        margin-bottom: 30px;
+      }
 
-        #AddTable {
-            margin: 0 auto;
-            font-size: 20px;
-            border-spacing: 5px 15px;
-        }
+      .passwork {
+        border: none;
+        outline: none;
+        border-bottom: 1px solid #4E5A64;
+        padding: 15px 0;
+        margin-bottom: 30px;
+      }
 
-        #AddInput {
-            text-align: center;
-            margin: 0 auto;
-            font-size: 25px;
-            width: 400px;
-        }
-
-        #AddButton {
-            text-align: center;
-            font-size: 25px;
-        }
+      .login-btn {
+        background-color: #2980B9;
+        color: #FFF;
+        cursor: pointer;
+        width: 108px;
+        height: 36px;
+      }
     </style>
 
-
-
-</head>
 <body>
-    {% include "header.html" %}
-    <div id="AddBox">
-        <h1 id="AddTitle">Đăng Nhập</h1>
-        <form method="POST">
-            {% csrf_token %}
-            <table id="AddTable">
-                <tr>
-                    <td><input id="AddInput" name="id" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="username" /></td>
-                </tr>
-                <tr>
-                    <td><input id="AddInput" name="password" type="password" placeholder="Password" /></td>
-                </tr>
-                <tr>
-                    <td><button id="DelButton" type="submit">Login</button></td>
-                </tr>
-
-
-            </table>
-        </form>
+    <div style="display: flex; height: 100vh">
+      <div style="flex: 4">
+        <img class="image"  src="https://tickettoadventures.files.wordpress.com/2018/07/fotor_149416244919855.jpg?w=820"/>
+      </div>
+      <div class="login" style="flex: 2; margin: 250px 50px 0px; width: 600px;">
+        <h1 style="font-family: 'Roboto Condensed', monospace; font-size: 50px; color: #4E5A64; margin: 20px 0 10px;">Login</h1>
+        <h4 style="font-family: 'Roboto Condensed', monospace; font-size: 20px; color: #4E5A64; margin: 10px 0;">Library Management System</h4>
+        <div  style="margin-top: 60px;">
+          <form style="display: flex; flex-direction: column;">
+            <input class="username" name="username" type="text" onkeyup="this.vale = this.value.toUpperCase()" placeholder="Username"/>
+            <input class="passwork" name="password" placeholder="Password"/>
+            <div style="text-align: end">
+              <input class="login-btn" type="submit" value="Login" />
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-    {% include "footer.html" %}
 </body>
-</html>
