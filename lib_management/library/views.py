@@ -5,8 +5,8 @@ import pyodbc
 import datetime
 from django.http import HttpResponse
 conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'
-                      'Server=NHANCSER\ADMIN;' 
-                      # 'Server=ADMIN;'
+                      # 'Server=NHANCSER\ADMIN;' 
+                      'Server=ADMIN;'
                       'Database=QLTV;'
                       'Trusted_Connection=yes;')
 cursor = conn.cursor()
@@ -29,7 +29,7 @@ def BookAdd(request, *args, **kwargs):
     Subject = Subjects()
     Subject.name = request.POST.get('subjectname')
     subject_names = [i[0] for i in cursor.execute(f"SELECT NAME FROM SUBJECTS")]
-    if Book.title != None and Book.position !=None and Authors.name != None and Subject.name != None:
+    if Book.title != None and Book.position !=None and Authors.name != None and Subject.name != None and Book.title != "" and Book.position !="" and Authors.name != "" and Subject.name != "":
         cursor.execute(f"""insert into BOOKS (TITLE, STATE, POSITION)
                          values(N'{Book.title}',{Book.state},N'{Book.position}')""")
         cursor.commit()
@@ -81,7 +81,7 @@ def CardAdd(request, *args, **kwargs):
     card.borrow_date = request.POST.get('borrow_date')
     card.due_date = request.POST.get('due_date')
     # card.borrow_date = datetime.datetime.strptime(request.POST.get('date'),"%Y-%m-%d").date()
-    if card.bookid != None and card.libcardid != None and card.borrow_date != "" and card.due_date != "":
+    if card.bookid != None and card.libcardid != None and card.borrow_date != "" and card.due_date != "" and card.bookid != "" and card.libcardid != "":
         cursor.execute(f"""insert into BORROWCARDS (BOOK_ID, LIBCARD_ID, BORROW_DATE, DUE_DATE, RETURN_DATE)
                          VALUES({card.bookid},{card.libcardid},'{card.borrow_date}','{card.due_date}',{card.return_date})""")
         cursor.commit()
@@ -155,7 +155,7 @@ def MemberAdd(request, *args, **kwargs):
     member.AGES = request.POST.get('age')
     member.ADDRESS = request.POST.get('address')
     member.CLASS = request.POST.get('class')
-    if member.NAME != None and member.AGES != None and member.ADDRESS != None and member.CLASS != None:
+    if member.NAME != None and member.AGES != None and member.ADDRESS != None and member.CLASS != None and member.NAME != "" and member.AGES != "" and member.ADDRESS != "" and member.CLASS != "":
         cursor.execute(f"""insert into LIBCARDS (NAME, AGES, ADDRESS, CLASS) 
                          values(N'{member.NAME}',{member.AGES},N'{member.ADDRESS}',N'{member.CLASS}')""")
         cursor.commit()
@@ -182,11 +182,11 @@ def BookDetail(request):
         key = request.POST.get("key")
         search_result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE
                                     FROM BOOKS B     
-                                    JOIN AUTHORS_BOOKS AB
-                                    ON B.BOOK_ID = AB.BOOK_ID JOIN AUTHORS A
+                                    left JOIN AUTHORS_BOOKS AB
+                                    ON B.BOOK_ID = AB.BOOK_ID left JOIN AUTHORS A
                                     ON AB.AUTHOR_ID  = A.AUTHOR_ID
-                                    JOIN SUBJECTS_BOOKS SB
-                                    ON B.BOOK_ID = SB.BOOK_ID JOIN SUBJECTS S
+                                    left JOIN SUBJECTS_BOOKS SB
+                                    ON B.BOOK_ID = SB.BOOK_ID left JOIN SUBJECTS S
                                     ON SB.SUBJECT_ID = S.SUBJECT_ID
                                     LEFT JOIN BORROWCARDS BC 
                                     ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
@@ -197,11 +197,11 @@ def BookDetail(request):
     if request.method=="GET":
         result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE
                                     FROM BOOKS B     
-                                    JOIN AUTHORS_BOOKS AB
-                                    ON B.BOOK_ID = AB.BOOK_ID JOIN AUTHORS A
+                                    left JOIN AUTHORS_BOOKS AB
+                                    ON B.BOOK_ID = AB.BOOK_ID left JOIN AUTHORS A
                                     ON AB.AUTHOR_ID  = A.AUTHOR_ID
-                                    JOIN SUBJECTS_BOOKS SB
-                                    ON B.BOOK_ID = SB.BOOK_ID JOIN SUBJECTS S
+                                    left JOIN SUBJECTS_BOOKS SB
+                                    ON B.BOOK_ID = SB.BOOK_ID left JOIN SUBJECTS S
                                     ON SB.SUBJECT_ID = S.SUBJECT_ID
                                     LEFT JOIN BORROWCARDS BC 
                                     ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
