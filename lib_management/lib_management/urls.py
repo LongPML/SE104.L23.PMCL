@@ -5,9 +5,6 @@ from library.views import *
 
 urlpatterns = [
     path('', home_view, name='home'),
-    path('searchbook/', search_book,),
-    path('admin/', admin.site.urls),
-    path('adminlogin/', admin_login),
     path('book/add', BookAdd),
     path('bookEdit/<int:id_b>', BookEdit),
     path('bookEdit/bookUpdate',BookUpdate),
@@ -19,4 +16,5 @@ urlpatterns = [
     path('cardEdit/cardUpdate',CardUpdate),
     path('bookDetail',BookDetail),
     path('login/',Login),
+    path('admin/',admin_home),
 ]
