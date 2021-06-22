@@ -25,6 +25,10 @@
         margin-bottom: 30px;
       }
 
+      .username:focus {
+        border-bottom: 1px solid #66afe9;
+      }
+      
       .passwork {
         border: none;
         outline: none;
@@ -33,12 +37,24 @@
         margin-bottom: 30px;
       }
 
+      .passwork:focus {
+        border-bottom: 1px solid #66afe9;
+      }
+
       .login-btn {
         background-color: #2980B9;
+        border: none;
+        outline: none;
         color: #FFF;
         cursor: pointer;
         width: 108px;
         height: 36px;
+      }
+
+      .login-btn:hover {
+        color: #fff;
+        transition: 0.2s linear;
+        background-color: #15405d;
       }
     </style>
 
@@ -53,7 +69,7 @@
         <div  style="margin-top: 60px;">
           <form style="display: flex; flex-direction: column;">
             <input class="username" name="username" type="text" onkeyup="this.vale = this.value.toUpperCase()" placeholder="Username"/>
-            <input class="passwork" name="password" placeholder="Password"/>
+            <input class="passwork" name="password" type="password" placeholder="Password"/>
             <div style="text-align: end">
               <input class="login-btn" type="submit" value="Login" />
             </div>
