@@ -105,6 +105,8 @@ html {
 
 .search-book .search_btn {
     border-radius: 5px;
+    border: none;
+    outline: none;
     background-color: #FF4D15;
     color: #fff;
     width: 67.5px;
@@ -120,6 +122,8 @@ html {
 
 .login-form .button-login {
     border-radius: 5px;
+    border: none;
+    outline: none;
     background-color: #FF4D15;
     color: #FFF;
     width: 67.5px;
