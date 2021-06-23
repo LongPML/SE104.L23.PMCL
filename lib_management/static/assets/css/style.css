@@ -35,12 +35,14 @@ html {
     justify-content: space-between;
     align-items: center;
     top: 0;
+    padding: 0 350px;
 }
 
 #nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    /* margin-left: 350px; */
 }
 
 #nav, .subnav {
@@ -121,6 +123,7 @@ html {
 .login-form {
     display: flex;
     align-items: center;
+    /* margin-right: 350px; */
 }
 
 .login-form .button-login {
