@@ -3,10 +3,11 @@ import library.models
 from library.models import *
 import pyodbc
 import datetime
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect
 conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'
-                      'Server=NHANCSER\ADMIN;' 
-                    #   'Server=ADMIN;'
+                      # 'Server=NHANCSER\ADMIN;' 
+                      'Server=ADMIN;'
                       'Database=QLTV;'
                       'Trusted_Connection=yes;')
 cursor = conn.cursor()
@@ -72,7 +73,8 @@ def BookUpdate(request):
     state = request.POST.get("state")
     cursor.execute(f"""UPDATE BOOKS SET STATE = {state}, POSITION = '{position}' WHERE BOOK_ID = {bookid}""")
     cursor.commit()
-    return BookEdit(request, bookid)
+    # return BookEdit(request, bookid)
+    return redirect('/bookDetail/')
 
 def CardAdd(request, *args, **kwargs):
     card = Borrowcards()
@@ -147,7 +149,8 @@ def CardUpdate(request):
         cursor.execute(f"""UPDATE BOOKS SET STATE = 1 WHERE BOOK_ID = {BOOK_ID}""")
     cursor.commit()
 
-    return CardEdit(request,card.BORROWCARD_ID)
+    # return CardEdit(request,card.BORROWCARD_ID)
+    return redirect('/cardDetail/')
 
 def MemberAdd(request, *args, **kwargs):
     member = Libcards()
@@ -215,7 +218,8 @@ def Login(request, *args, **kwargs):
     if username != None and password != None:
         match = cursor.execute(f"""select PASSWORD from ACCOUNT WHERE USERNAME = '{username}'""").fetchall()[0][0]
         if password == match:
-            return admin_home(request)
+            # return admin_home(request)
+            return redirect('/admin/')
     return render(request, "Login.html", {})
 
 
