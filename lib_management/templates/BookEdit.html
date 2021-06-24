@@ -2,63 +2,143 @@
 <html>
         <head>
                 <meta charset="UTF-8" />
-                <title>Book Update</title>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+                <title>Book Add</title>
                 <link rel="stylesheet" href="/static/assets/css/style.css">
-                
+                <link rel="preconnect" href="https://fonts.googleapis.com">
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
+
                 <style>
-                        #UpdateBox{
-                                position: absolute; width: 600px; height: 550px; text-align: center; left: 50%; top: 50%; transform: translate(-50%, -50%); border: 1px solid black; 
+                        .content {
+                                margin-top: 50px;
+                                width: 100%;
+                                height: 789px;
+                                background-image: url('https://template68194.motopreview.com/mt-demo/68100/68194/mt-content/uploads/2018/07/mt-1519-content-bg-3.jpg');
+                                background-position: center;
+                                background-repeat: no-repeat;
+                                background-size: cover;
                         }
-                        #UpdateTitle { 
-                                text-align: center; font-size: 50px;
+
+                        .content .content-wrapper {
+                                padding: 130px 0;
                         }
-                        #UpdateTable {
-                                margin: 0 auto; font-size: 20px; border-spacing: 5px 15px;
+
+                        .content .update_book {
+                                margin: 0 350px;
+                                height: 500px;
                         }
-                        #UpdateInput {
-                                text-align: center; margin: 0 auto; font-size: 25px; width: 400px;
+
+                        .update_title {
+                                color: #fff;
+                                font-size: 60px;
+                                font-family: 'Abril Fatface', cursive;
                         }
-                        #UpdateButton {
-                                text-align: center; font-size: 25px;
+
+                        .input {
+                                padding: 50px 0 0;
+                        }
+
+                        form {
+                                display: flex;
+                        }
+
+                        .input_col1, .input_col2 {
+                                display: flex;
+                                flex-direction: column;
+                                padding-right: 50px;
+                        }
+
+                        .input_col1 div, .input_col2 div {
+                                margin-bottom: 20px;
+                        }
+
+                        .label_text {
+                                color: #fff;
+                                font-size: 20px;
+                                font-family: 'Abril Fatface', cursive;
+                                width: 105px;
+                                margin-right: 10px;
+                                display: inline-block;
+                        }
+
+                        .input .UpdateInput {
+                                text-align: left; 
+                                width: 430px;
+                                height: 60px;
+                                padding: 18px 20px;
+                        }
+                        .UpdateButton {
+                                text-align: center; 
+                                font-size: 12px;
+                                width: 140px;
+                                height: 60px;
+                                padding: 17px 15px;
+                                background-color: #cbb58b;
+                                cursor: pointer;
+                                font-family: Arial, Helvetica, sans-serif;
+                                border: 3px solid #cbb58b;
+                                outline: none;
+                        }
+
+                        .UpdateButton:hover {
+                                background-color: #fff;
+                                transition: 0.2s linear;
                         }
                 </style>
         </head>
         <body>
                 {% include "admin-header.html" %}
-                <div id="UpdateBox"> 
-                        <h1 id="UpdateTitle">Book Information</h1>
-                        {% for book in BookDetail %} 
-                        <form method="POST" action="bookUpdate">
-                        {% csrf_token %}
-                        <table id="UpdateTable">
-                                <tr>
-                                        <td><input id="UpdateInput" name="ID" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Book ID" value="{{book.BOOK_ID}}" readonly /></td>
-                                </tr>
-                                <tr>
-                                        <td><input id="UpdateInput" name="title" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Book Name" value="{{book.TITLE}}" readonly/></td>
-                                </tr>
-                                <tr>
-                                        <td><input id="UpdateInput" name="authorname" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Author" value="{{book.AUTHOR}}" readonly/></td>
-                                </tr>
-                                <tr>
-                                        <td><input id="UpdateInput" name="subjectname" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Topic" value="{{book.SUBJECT}}" readonly></td>
-                                </tr>
-                                <tr>
-                                        <td><input id="UpdateInput" name="name" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Borrower" value="{{book.NAME}}" readonly></td>
-                                </tr>
-                                <tr>
-                                        <td><input id="UpdateInput" name="position" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Position" value="{{book.POSITION}}" /></td>
-                                </tr>
-                                <tr>
-                                        <td><input id="UpdateInput" name="state" type="number" onkeyup="this.value = this.value.toUpperCase();" placeholder="State" value="{{book.STATE}}" /></td>
-                                </tr>
-                                <tr>
-                                        <td><button id="UpdateButton" type="submit" onclick="return alert('Update Book Successfully!')">Update</button></td>
-                                </tr>
-                        </table>
-                        </form>
-                        {% endfor %}
+                <div class="content">
+                        <div class="content-wrapper">
+                                <div class="update_book"> 
+                                        <h2 class="update_title">Book Information</h2>
+                                        <div class="input">
+                                                {% for book in BookDetail %}
+                                                <form method="POST" action="bookUpdate">
+                                                {% csrf_token %}
+                                                <div class="input_col1">
+                                                        <div>
+                                                                <label class="label_text">Book ID</label>
+                                                                <input class="UpdateInput" name="ID" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Book ID" value="{{book.BOOK_ID}}" readonly />
+                                                        </div>
+                                                        <div>
+                                                                <label class="label_text">Book Name</label>
+                                                                <input class="UpdateInput" name="title" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Book Name" value="{{book.TITLE}}" readonly/>
+                                                        </div>
+                                                        <div>    
+                                                                <label class="label_text">Authore</label>
+                                                                <input class="UpdateInput" name="authorname" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Author" value="{{book.AUTHOR}}" readonly/>
+                                                        </div>
+                                                        <div> 
+                                                                <label class="label_text">Topic</label>
+                                                                <input class="UpdateInput" name="subjectname" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Topic" value="{{book.SUBJECT}}" readonly>
+                                                        </div>
+                                                        <div>    
+                                                                <label class="label_text"></label>
+                                                                <button class="UpdateButton" type="submit" onclick="return alert('Update Book Successfully!')">Update</button>
+                                                        </div>
+                                                </div>
+                                                <div class="input_col2">
+                                                        <div>
+                                                                <label class="label_text">Borrower</label>
+                                                                <input class="UpdateInput" name="name" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Borrower" value="{{book.NAME}}" readonly>
+                                                        </div>
+                                                        <div>    
+                                                                <label class="label_text">Position</label>
+                                                                <input class="UpdateInput" name="position" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Position" value="{{book.POSITION}}" />
+                                                        </div>
+                                                        <div>     
+                                                                <label class="label_text">State</label>
+                                                                <input class="UpdateInput" name="state" type="number" onkeyup="this.value = this.value.toUpperCase();" placeholder="State" value="{{book.STATE}}" />
+                                                        </div>
+                                                </div>
+                                                </form>
+                                                {% endfor %}
+                                        </div>
+                                </div>
+                        </div>
                 </div>
-                {% include "footer.html" %}
+                {% include "admin-footer.html" %}
         </body>
 </html>

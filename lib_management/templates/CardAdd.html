@@ -1,56 +1,126 @@
 <!DOCTYPE html>
 <html>
         <head>
-                <title>Borrow Card Add</title>
+                <meta charset="UTF-8" />
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+                <title>Book Add</title>
                 <link rel="stylesheet" href="/static/assets/css/style.css">
+                <link rel="preconnect" href="https://fonts.googleapis.com">
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
 
                 <style>
-                        #AddBox{
-                                position: absolute; width: 700px; height: 400px; text-align: center; left: 50%; top: 50%; transform: translate(-50%, -50%); border: 1px solid black; 
+                        .content {
+                                margin-top: 50px;
+                                width: 100%;
+                                height: 789px;
+                                background-image: url('https://template68194.motopreview.com/mt-demo/68100/68194/mt-content/uploads/2018/07/mt-1519-content-bg-3.jpg');
+                                background-position: center;
+                                background-repeat: no-repeat;
+                                background-size: cover;
                         }
-                        #AddTitle { 
-                                text-align: center; font-size: 50px;
+
+                        .content .content-wrapper {
+                                padding: 130px 0;
                         }
-                        #AddTable {
-                                margin: 0 auto; font-size: 20px; border-spacing: 5px 15px;
+
+                        .content .add_book {
+                                margin: 0 350px;
+                                height: 500px;
                         }
-                        #AddInput {
-                                text-align: center; margin: 0 auto; font-size: 25px; width: 400px;
+
+                        .add_title {
+                                color: #fff;
+                                font-size: 60px;
+                                font-family: 'Abril Fatface', cursive;
                         }
-                        #AddButton {
-                                text-align: center; font-size: 25px;
+
+                        .input {
+                                padding: 50px 0 0;
+                        }
+
+                        form {
+                                display: flex;
+                                flex-direction: column;
+                        }
+
+                        form div {
+                                margin-bottom: 20px;
+                        }
+
+                        .label_text {
+                                color: #fff;
+                                font-size: 20px;
+                                font-family: 'Abril Fatface', cursive;
+                                width: 110px;
+                                margin-right: 10px;
+                                display: inline-block;
+                        }
+
+                        .input .AddInput {
+                                text-align: left; 
+                                width: 430px;
+                                height: 60px;
+                                padding: 18px 20px;
+                        }
+                        .AddButton {
+                                text-align: center; 
+                                font-size: 12px;
+                                width: 140px;
+                                height: 60px;
+                                padding: 17px 15px;
+                                background-color: #cbb58b;
+                                cursor: pointer;
+                                font-family: Arial, Helvetica, sans-serif;
+                                border: 3px solid #cbb58b;
+                                outline: none;
+                        }
+
+                        .AddButton:hover {
+                                background-color: #fff;
+                                transition: 0.2s linear;
                         }
                 </style>
         </head>
         <body>
                 {% include "admin-header.html" %}
-                <div id="AddBox"> 
-                        <h1 id="AddTitle">Borrow Card Information</h1>
-                        <form method="POST">
-                        {% csrf_token %}
-                        <table id="AddTable">
-                                <tr>
-                                        <td><label for="BookID">Book ID</label></td>
-                                        <td><input id="AddInput" type="number" name="bookid" placeholder="Book ID"/></td>
-                                </tr>
-                                <tr>
-                                        <td><label for="BorrowDate">Borrow Date</label></td>
-                                        <td><input id="AddInput" type="date" name="borrow_date" placeholder="Borrow Date" value="" /></td>
-                                </tr>
-                                <tr>        
-                                        <td><label for="DueDate">Due Date</label></td>
-                                        <td><input id="AddInput" type="date" name="due_date" placeholder="Due Date" value="" /></td>
-                                </tr>
-                                <tr>
-                                        <td><label for="MemberID">Member ID</label></td>
-                                        <td><input id="AddInput" type="number" name="libcardid" placeholder="Member ID"/></td>
-                                </tr>
-                                <tr>
-                                        <td></td>
-                                        <td><button id="AddButton" type="submit" onclick="return alert('Add Borrow Card Successfully!')">ADD</button></td>
-                                </tr>
-                        </table>
-                        </form>
+                <div class="content">
+                        <div class="content-wrapper">
+                                <div class="add_book">
+                                        <h2 class="add_title">Borrow Card Information</h2>
+                                        <div class="input">
+                                                <form method="POST">
+                                                        {% csrf_token %}
+                                                        <div>
+                                                                <label class="label_text">Book ID</label>
+                                                                <input class="AddInput" type="number" name="bookid" placeholder="Book ID"/>
+
+                                                        </div>
+                                                        <div>
+                                                                <label class="label_text" >Borrow Date</label>
+                                                                <input class="AddInput" type="date" name="borrow_date" placeholder="Borrow Date" value="" />
+
+                                                        </div>
+                                                        <div>        
+                                                                <label class="label_text">Due Date</label>
+                                                                <input class="AddInput" type="date" name="due_date" placeholder="Due Date" value="" />
+
+                                                        </div>
+                                                        <div>
+                                                                <label class="label_text">Member ID</label>
+                                                                <input class="AddInput" type="number" name="libcardid" placeholder="Member ID"/>
+
+                                                        </div>
+                                                        <div">
+                                                                <label class="label_text"></label>
+                                                                <button class="AddButton" type="submit" onclick="return alert('Add Borrow Card Successfully!')">ADD</button>
+
+                                                        </div>
+                                                </form>
+                                        </div>
+                                </div>
+                        </div>
                 </div>
+                {% include "admin-footer.html" %}
         </body>
 </html>

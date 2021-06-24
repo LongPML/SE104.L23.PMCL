@@ -48,6 +48,15 @@
                                 margin-bottom: 20px;
                         }
 
+                        .label_text {
+                                color: #fff;
+                                font-size: 20px;
+                                font-family: 'Abril Fatface', cursive;
+                                width: 110px;
+                                margin-right: 10px;
+                                display: inline-block;
+                        }
+
                         .input .AddInput {
                                 text-align: left; 
                                 width: 430px;
@@ -63,13 +72,13 @@
                                 background-color: #cbb58b;
                                 cursor: pointer;
                                 font-family: Arial, Helvetica, sans-serif;
-                                border: 2px;
-                                border-color: #cbb58b;
+                                border: 3px solid #cbb58b;
                                 outline: none;
                         }
 
                         .AddButton:hover {
                                 background-color: #fff;
+                                transition: 0.2s linear;
                         }
                 </style>
         </head>
@@ -83,29 +92,24 @@
                                                 <form method="POST">
                                                         {% csrf_token %}
                                                         <div>
-                                                                <tr>
-                                                                        <td><input class="AddInput" name="title" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Book Name"/></td>
-                                                                </tr>
+                                                                <label class="label_text">Book Name</label>
+                                                                <input class="AddInput" name="title" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Book Name"/>
                                                         </div>
                                                         <div>
-                                                                <tr>
-                                                                        <td><input class="AddInput" name="authorname" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Author"/></td>
-                                                                </tr>
+                                                                <label class="label_text">Author</label>
+                                                                <input class="AddInput" name="authorname" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Author"/>
                                                         </div>
                                                         <div>
-                                                                <tr>
-                                                                        <td><input class="AddInput" name="subjectname" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Topic"/></td>
-                                                                </tr>
+                                                                <label class="label_text">Topic</label>
+                                                                <input class="AddInput" name="subjectname" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Topic"/>
                                                         </div>
                                                         <div>
-                                                                <tr>
-                                                                        <td><input class="AddInput" name="position" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Position"/></td>
-                                                                </tr>
+                                                                <label class="label_text">Position</label>
+                                                                <input class="AddInput" name="position" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Position"/>
                                                         </div>
                                                         <div>
-                                                                <tr>
-                                                                        <td><button class="AddButton" type="submit" onclick="return alert('Add Book Successfully!')">ADD</button></td>
-                                                                </tr>
+                                                                <label class="label_text"></label>
+                                                                <button class="AddButton" type="submit" onclick="return alert('Add Book Successfully!')">ADD</button>
                                                         </div>
                                                 </form>
                                         </div>
