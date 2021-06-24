@@ -35,12 +35,14 @@ html {
     justify-content: space-between;
     align-items: center;
     top: 0;
+    padding: 0 350px;
 }
 
 #nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    /* margin-left: 350px; */
 }
 
 #nav, .subnav {
@@ -89,6 +91,9 @@ html {
 
 #nav .nav-sort-down {
     font-size: 14px;
+    padding: 0;
+    margin: 0;
+    width: 20px;
 }
 
 .search-book {
@@ -118,6 +123,7 @@ html {
 .login-form {
     display: flex;
     align-items: center;
+    /* margin-right: 350px; */
 }
 
 .login-form .button-login {
