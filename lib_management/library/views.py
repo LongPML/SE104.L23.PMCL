@@ -3,10 +3,11 @@ import library.models
 from library.models import *
 import pyodbc
 import datetime
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect
 conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'
-                      'Server=NHANCSER\ADMIN;' 
-                    #   'Server=ADMIN;'
+                      # 'Server=NHANCSER\ADMIN;' 
+                      'Server=ADMIN;'
                       'Database=QLTV;'
                       'Trusted_Connection=yes;')
 cursor = conn.cursor()
@@ -215,7 +216,8 @@ def Login(request, *args, **kwargs):
     if username != None and password != None:
         match = cursor.execute(f"""select PASSWORD from ACCOUNT WHERE USERNAME = '{username}'""").fetchall()[0][0]
         if password == match:
-            return admin_home(request)
+            # return admin_home(request)
+            return redirect('/admin/')
     return render(request, "Login.html", {})
 
 
