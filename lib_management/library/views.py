@@ -73,7 +73,8 @@ def BookUpdate(request):
     state = request.POST.get("state")
     cursor.execute(f"""UPDATE BOOKS SET STATE = {state}, POSITION = '{position}' WHERE BOOK_ID = {bookid}""")
     cursor.commit()
-    return BookEdit(request, bookid)
+    # return BookEdit(request, bookid)
+    return redirect('/bookDetail/')
 
 def CardAdd(request, *args, **kwargs):
     card = Borrowcards()
@@ -148,7 +149,8 @@ def CardUpdate(request):
         cursor.execute(f"""UPDATE BOOKS SET STATE = 1 WHERE BOOK_ID = {BOOK_ID}""")
     cursor.commit()
 
-    return CardEdit(request,card.BORROWCARD_ID)
+    # return CardEdit(request,card.BORROWCARD_ID)
+    return redirect('/cardDetail/')
 
 def MemberAdd(request, *args, **kwargs):
     member = Libcards()
