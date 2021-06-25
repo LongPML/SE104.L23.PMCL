@@ -6,33 +6,232 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" href="/static/assets/css/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,400;1,300;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
 
   <title>Library Management System</title>
  
   <style>
-    html {
-      background-color: #f2f2f2;
-    }
-
     .slider {
       margin-top: 50px;
-      padding-top: 50%;
+      height: 95vh;
       background: url('https://template68194.motopreview.com/mt-demo/68100/68194/mt-content/uploads/2018/07/mt-1519-content-bg-1.jpg')
       top center / cover no-repeat;
+      display: flex;
+      align-items: center;
     }
 
+    .slogan-content {
+      margin: 0 350px;
+      background-color: rgba(0,0,0,0.4);
+      padding: 50px;
+    }
 
+    .slogan-content .title_slogan {
+      width: 880px;
+      height: 210px;
+      padding-bottom: 20px;
+      
+    }
+
+    .mono_text {
+      font-weight: 400;
+      font-style: normal;
+      font-family: 'Abril Fatface', cursive;
+      color: #fff;
+      font-size: 95px;
+      line-height: 1;
+      letter-spacing: 0px;
+    }
+
+    .slogan-content .para_slogan {
+      width: 880px;
+      height: 22px;
+    }
+
+    .mono_text-normal {
+      font-weight: 400;
+      font-style: normal;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #fff;
+      font-size: 14px;
+      line-height: 1.6;
+      letter-spacing: 0px;
+    }
+
+    
+
+    .content{
+    }
+
+    .popbook_list {
+      width: 100%;
+      background-color: #F2F2F2;
+      padding: 130px 0;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+
+    }
+    .container_fluid {
+      width: 1200px;
+    }
+
+    .pop {
+      font-weight: 400;
+      font-style: normal;
+      font-family: 'Abril Fatface', display;
+      color: #000000;
+      font-size: 40px;
+      line-height: 1.3;
+      letter-spacing: 0px;
+      text-align: center;
+      padding-bottom: 20px;
+    }
+
+    hr {
+      display: block;
+      unicode-bidi: isolate;
+      margin-block-start: 0.5em;
+      margin-block-end: 0.5em;
+      margin-inline-start: auto;
+      margin-inline-end: auto;
+      overflow: hidden;
+      border-style: inset;
+      border-width: 1px;
+      border-color: #cbb58b;
+    }
+
+    .books{
+      display: flex;
+      flex-wrap: wrap;
+      padding-top: 50px;
+    }
+
+    .book-item{
+      width: 300px;
+      padding: 30px 10px;
+    }
+
+    .img-book {
+      width: 100%;
+      height: 320px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .book-img{
+      width: 221px;
+      height: 320px;
+      border-radius: 5px;
+      box-shadow: -5px 0px 14px 1px rgb(79 79 79 / 40%);
+    }
+
+    .book-name{
+      margin-top: 20px;
+      text-align: center;
+      font-weight: 400;
+      font-style: normal;
+      font-family: 'Abril Fatface', display;
+      color: #000000;
+      font-size: 20px;
+      line-height: 1.4;
+      letter-spacing: 0px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      width: 280px;
+    }
+
+    .short-desc{
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      text-align: center;
+      font-weight: 400;
+      font-style: normal;
+      font-family: 'Open Sans', sans-serif;
+      color: #878787;
+      font-size: 14px;
+      line-height: 1.6;
+      letter-spacing: 0px;
+      margin: 20px;
+    }
+
+    
   </style>
 </head>
 
   <body>
   {% include "header.html" %}
   <div class="slider">
-   
+    <div class="slogan-content">
+      <div class="title_slogan">
+        <h1 class="mono_text">The Wonderfull World of Reading</h1>
+      </div>
+      <div class="para_slogan">
+        <p class="mono_text-normal">The library is a place for everyone to explore, discover, and engage</p>
+      </div>
+    </div>
   </div>
 
   <div class="content">
-    
+    <div class="popbook_list">
+      <div class="container">
+        <div class="container_fluid">
+          <h4 class="pop">Popular Books</h4>
+
+          <div class="widget">
+            <hr class="divider-line" style="max-width: 100%; width: 6%;">
+          </div>
+
+          <div class="books">
+          
+
+            <div class="book-item">
+              <div class="img-book">
+                <img class="book-img" src="https://template68194.motopreview.com/mt-demo/68100/68194/mt-content/uploads/2018/07/mt-1519-home-img-4.png" alt="book"/>
+              </div>
+              <div class="book-name">Warlight</div>
+              <p class="short-desc">Novel by Michael Ondaatje</p>
+              
+            </div>
+
+            <div class="book-item">
+              <div class="img-book">
+                <img class="book-img" src="https://template68194.motopreview.com/mt-demo/68100/68194/mt-content/uploads/2018/07/mt-1519-home-img-5.png" alt="book"/>
+              </div>
+              <div class="book-name">You Think It, I'll Say It: Stories</div>
+              <p class="short-desc">Novel by Curtis Sittenfeld</p>
+              
+            </div>
+
+            
+            <div class="book-item">
+              <div class="img-book">
+                <img class="book-img" src="https://template68194.motopreview.com/mt-demo/68100/68194/mt-content/uploads/2018/07/mt-1519-home-img-6.png" alt="book"/>
+              </div>
+              <div class="book-name">The Death of Mrs. Westaway</div>
+              <p class="short-desc">Novel by Ruth Ware</p>
+              
+            </div>
+
+            <div class="book-item">
+              <div class="img-book">
+                <img class="book-img" src="https://template68194.motopreview.com/mt-demo/68100/68194/mt-content/uploads/2018/07/mt-1519-home-img-7.png" alt="book"/>
+              </div>
+              <div class="book-name">I've Loved You Since Forever</div>
+              <p class="short-desc">Book by Hoda Kotb</p>
+              
+            </div>
+
+
+          </div>
+
+        </div>
+      </div>
+    </div>
   </div>
   
   {% include "footer.html" %}
