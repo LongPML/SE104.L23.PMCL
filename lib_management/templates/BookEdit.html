@@ -114,6 +114,7 @@
                                                                 <label class="label_text">Topic</label>
                                                                 <input class="UpdateInput" name="subjectname" type="text" onkeyup="this.value = this.value.toUpperCase();" placeholder="Topic" value="{{book.SUBJECT}}" readonly>
                                                         </div>
+                                                        
                                                         <div>    
                                                                 <label class="label_text"></label>
                                                                 <button class="UpdateButton" type="submit" onclick="return alert('Update Book Successfully!')">Update</button>
@@ -131,6 +132,10 @@
                                                         <div>     
                                                                 <label class="label_text">State</label>
                                                                 <input class="UpdateInput" name="state" type="number" onkeyup="this.value = this.value.toUpperCase();" placeholder="State" value="{{book.STATE}}" />
+                                                        </div>
+                                                        <div> 
+                                                                <label class="label_text">Imgae Source</label>
+                                                                <input class="UpdateInput" name="path" type="text" placeholder="Topic" value="{{book.PATH}}">
                                                         </div>
                                                 </div>
                                                 </form>
