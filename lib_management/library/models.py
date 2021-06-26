@@ -7,6 +7,7 @@ class Books(models.Model):
 	title = models.CharField(max_length=30)
 	position = models.IntegerField()
 	state = 1
+	path = models.CharField(max_length=200)
 
 class Authors(models.Model):
 	id = models.IntegerField(primary_key=True)
