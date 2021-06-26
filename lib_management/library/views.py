@@ -7,21 +7,48 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'
                       'Server=NHANCSER\ADMIN;' 
-                    #   'Server=ADMIN;'
+                      # 'Server=ADMIN;'
                       'Database=QLTV;'
                       'Trusted_Connection=yes;')
 cursor = conn.cursor()
 # Create your views here.
 def home_view(request, *args, **kwargs):
+
     return render(request, "index.html", {})
 
 def admin_home(request, *args, **kwargs):
-    return render(request, "admin-home.html", {})
+    interested_authors = cursor.execute(f""" select *
+                                            from AUTHORS
+                                            where AUTHOR_ID in 
+                                            (select top 10 AB.AUTHOR_ID
+                                            from BORROWCARDS BC right JOIN BOOKS B 
+                                            ON BC.BOOK_ID = B.BOOK_ID
+                                            left JOIN AUTHORS_BOOKS AB ON B.BOOK_ID = AB.BOOK_ID
+                                            WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE()) 
+                                            AND YEAR(BC.BORROW_DATE) = YEAR(GETDATE())
+                                            GROUP BY AB.AUTHOR_ID
+                                            ORDER BY COUNT(AB.AUTHOR_ID) DESC)""")
+    interested_authors = cursor.fetchall()
+    interested_subjects = cursor.execute(f"""   select *
+                                                from SUBJECTS
+                                                where SUBJECT_ID in 
+                                                (select top 10 SB.SUBJECT_ID
+                                                from BORROWCARDS BC right JOIN BOOKS B 
+                                                ON BC.BOOK_ID = B.BOOK_ID
+                                                left JOIN SUBJECTS_BOOKS SB ON B.BOOK_ID = SB.BOOK_ID
+                                                WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE()) 
+                                                AND YEAR(BC.BORROW_DATE) = YEAR(GETDATE())
+                                                GROUP BY SB.SUBJECT_ID
+                                                ORDER BY COUNT(SB.SUBJECT_ID) DESC)""")
+    interested_subjects = cursor.fetchall()
+
+    return render(request, "admin-home.html", {'I_Authors':interested_authors,'I_Subjects':interested_subjects})
 
 def BookAdd(request, *args, **kwargs):
     Book = Books()
     Book.title = request.POST.get('title')
     Book.position = request.POST.get('position')
+    Book.path = request.POST.get('path')
     Author = Authors()
     Authors.name = request.POST.get('authorname')
     author_names = [i[0] for i in cursor.execute(f"SELECT NAME FROM AUTHORS")]
@@ -29,9 +56,14 @@ def BookAdd(request, *args, **kwargs):
     Subject.name = request.POST.get('subjectname')
     subject_names = [i[0] for i in cursor.execute(f"SELECT NAME FROM SUBJECTS")]
     if Book.title != None and Book.position !=None and Authors.name != None and Subject.name != None and Book.title != "" and Book.position !="" and Authors.name != "" and Subject.name != "":
-        cursor.execute(f"""insert into BOOKS (TITLE, STATE, POSITION)
+        if Book.path != None and Book.path != "":
+            cursor.execute(f""" insert into BOOKS (TITLE, STATE, POSITION, PATH)
+                         values(N'{Book.title}',{Book.state},N'{Book.position}','{Book.path}')""")
+            cursor.commit()
+        else:
+            cursor.execute(f"""insert into BOOKS (TITLE, STATE, POSITION)
                          values(N'{Book.title}',{Book.state},N'{Book.position}')""")
-        cursor.commit()
+            cursor.commit()                    
         if Authors.name not in author_names:
             cursor.execute(f"insert into AUTHORS values(N'{Authors.name}')")
             cursor.commit()
@@ -50,7 +82,7 @@ def BookAdd(request, *args, **kwargs):
         return render(request, "BookAdd.html", {})
 
 def BookEdit(request, id_b):
-    result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE
+    result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE, B.PATH
                                 FROM BOOKS B     
                                 JOIN AUTHORS_BOOKS AB
                                 ON B.BOOK_ID = AB.BOOK_ID JOIN AUTHORS A
@@ -69,7 +101,8 @@ def BookUpdate(request):
     bookid = request.POST.get("ID")
     position = request.POST.get("position")
     state = request.POST.get("state")
-    cursor.execute(f"""UPDATE BOOKS SET STATE = {state}, POSITION = '{position}' WHERE BOOK_ID = {bookid}""")
+    path = request.POST.get("path")
+    cursor.execute(f"""UPDATE BOOKS SET STATE = {state}, POSITION = '{position}', PATH = '{path}' WHERE BOOK_ID = {bookid}""")
     cursor.commit()
     # return BookEdit(request, bookid)
     return redirect('/bookDetail/')

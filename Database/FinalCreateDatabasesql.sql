@@ -52,6 +52,8 @@ CREATE TABLE ACCOUNT(
 )
 INSERT INTO ACCOUNT VALUES('ADMIN','ADMIN')
 
+ALTER TABLE BOOKS ADD PATH NVARCHAR(200) NULL
+
 SET DATEFORMAT dmy
 
 --use QLTV EXEC sp_changedbowner 'sa' --dung de cap quyen owner cho database de ve diagram khi copy tu may nay qua may khac
