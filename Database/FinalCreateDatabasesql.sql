@@ -15,6 +15,8 @@ STATE INT not null,
 POSITION nVARCHAR(10) not null
 )
 
+
+
 create table SUBJECTS(
 SUBJECT_ID int IDENTITY(1,1) CONSTRAINT PK_SJ PRIMARY KEY,
 NAME	nVarchar(30)	Not Null,
@@ -53,8 +55,10 @@ CREATE TABLE ACCOUNT(
 INSERT INTO ACCOUNT VALUES('ADMIN','ADMIN')
 
 ALTER TABLE BOOKS ADD PATH NVARCHAR(200) NULL
+ALTER TABLE BOOKS ALTER COLUMN TITLE nVarchar(50)
 
 SET DATEFORMAT dmy
 
 --use QLTV EXEC sp_changedbowner 'sa' --dung de cap quyen owner cho database de ve diagram khi copy tu may nay qua may khac
 
+select * from BOOKS
