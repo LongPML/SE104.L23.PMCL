@@ -104,8 +104,6 @@
     }
 
     .books{
-      display: flex;
-      flex-wrap: wrap;
       padding-top: 50px;
     }
 
@@ -195,24 +193,25 @@
             <hr class="divider-line" style="max-width: 100%; width: 6%;">
           </div>
 
-          <div class="books">
-          
-
-            <div class="book-item">
+          <div class="books flex justify-center">
+            
+              {% for book in BookInformation %}
+              <div class="book-item">
               <div class="img-book">
-                <img class="book-img" src="https://template68194.motopreview.com/mt-demo/68100/68194/mt-content/uploads/2018/07/mt-1519-home-img-4.png" alt="book"/>
+                <!-- <img class="book-img" src="https://template68194.motopreview.com/mt-demo/68100/68194/mt-content/uploads/2018/07/mt-1519-home-img-4.png" alt="book"/> -->
+                <img class="book-img" src="{{book.PATH}}" alt="book"/>
               </div>
-              <div class="book-name">Warlight</div>
-              <p class="short-desc">Novel by Michael Ondaatje</p>
+              <div class="book-name">{{book.TITLE}}</div>
+              <p class="short-desc">Novel by {{book.AUTHOR}}</p>
               <div class="book_information">
                 <a href="" class="button_link">
                   <span class="button_label">MORE INFO</span>
                 </a>
               </div>
-              
             </div>
+              {% endfor %}
 
-            <div class="book-item">
+            <!-- <div class="book-item">
               <div class="img-book">
                 <img class="book-img" src="https://template68194.motopreview.com/mt-demo/68100/68194/mt-content/uploads/2018/07/mt-1519-home-img-5.png" alt="book"/>
               </div>
@@ -250,7 +249,7 @@
                   <span class="button_label">MORE INFO</span>
                 </a>
               </div>
-            </div>
+            </div> -->
 
 
           </div>
