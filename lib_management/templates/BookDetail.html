@@ -1,13 +1,26 @@
 <!DOCTYPE html>
 <html>
         <head>
-                <title>Borrow Card Add</title>
+                <title>Book Detail</title>
                 <link rel="stylesheet" href="/static/assets/css/style.css">
-                
-                <style>
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+                <style>
+                        
+                        .card-detail{
+                                margin-top: var(--header-height);
+                                background-image: url('https://template68194.motopreview.com/mt-demo/68100/68194/mt-content/uploads/2018/07/mt-1519-content-bg-3.jpg');
+                                background-position: center;
+                                background-repeat: no-repeat;
+                                background-size: cover;
+                        }
                         #AddTitle { 
-                                text-align: center; font-size: 50px;
+                                text-align: center;
+                                padding: 40px 0;
+                                color: #fff;
+                                font-size: 60px;
+                                font-family: 'Abril Fatface', cursive;
                         }
 
                         td {text-align: center; vertical-align: middle;
@@ -16,60 +29,107 @@
                         }
                         table.center {margin-left: auto; margin-right: auto;
                         }
-                        .book_detail input{
+                        .card_detail input{
                             font-size: 20px
                         }
                         input.typesearch{
                             font-size: 20px; width: 500px;text-align: center;
                         }
+
+                        .search{
+                                --input-height: 50px;
+                        }
+
+                        .search-input{
+                                height: var(--input-height);
+                                outline: none;
+                                border: 1px solid rgba(0,0,0,0.5);
+                                padding: 0 10px;
+                                border-radius: 4px;
+                                width: 350px;
+                        }
+
+                        .search-btn{
+                                height: var(--input-height);
+                                outline: none;
+                                border-radius: 4px;
+                                margin-left: 10px;
+                                padding: 0 20px;
+                                border: 1px solid rgba(0,0,0,0.5);
+                                cursor: pointer;
+                        }
+
+                        .table-container{
+                                max-width: 1400px;
+                                margin-top: 50px;
+                                /* min-height: 70vh; */
+                                color: white;
+                                background-color: rgba(0,0,0,0.5);
+                        }
+
+                        .text-left{
+                                text-align: start;
+                        }
+
+                        .table-container a {
+                                text-decoration: none;
+                                color: white;
+                        }
+
+                        td {
+                                font-family: Arial, Helvetica, sans-serif;
+                        }
+
                 </style>
         </head>
         <body>
                 {% include "admin-header.html" %}
-                <div class="book_detail"> 
-                        <br/><br/>
+                <div class="card-detail"> 
                         <h1 id="AddTitle">Book Information</h1>
-                        <form method="POST">
+
+                        <form method="POST" class="search flex justify-center align-center">
                             {% csrf_token %}
-                            <center>
-                                <div>
-                                    <input class="typesearch" type="text" name="key" placeholder="Enter Title or Book's ID" onkeyup="this.value = this.value.toUpperCase();">
-                                    <input type="submit" value="Search">
-                                </div>
-                            </center>
+                                <input class="search-input" type="text" name="key" placeholder="Enter Name or Library Card's ID" onkeyup="this.value = this.value.toUpperCase();">
+                                <button class="search-btn" type="submit">Search</button>
                         </form>
-                        <br/><br/>
-                        <form method="GET">
-                        {% csrf_token %}
-                        <table border="1" width="80%" class="center">
-                                 <thead bgcolor="#ddd">
-                                        <tr>
-                                                <td>Book IDs</td>
-                                                <td>Title</td>
-                                                <td>Author</td>
-                                                <td>Subject</td>
-                                                <td>Borrower</td>
-                                                <td>Position</td>
-                                                <td>State</td>
-                                                <td>Edit</td>
-                                        </tr>
-                                 </thead>
-                                 {% for book in BookDetail %}
-                                        
-                                        <tr>
-                                                <td>{{book.BOOK_ID}}</td>
-                                                <td>{{book.TITLE}}</td>
-                                                <td>{{book.AUTHOR}}</td>
-                                                <td>{{book.SUBJECT}}</td>
-                                                <td>{{book.NAME}}</td>
-                                                <td>{{book.POSITION}}</td>
-                                                <td>{{book.STATE}}</td>
-                                                <td><a href="/bookEdit/{{book.BOOK_ID}}"><input type="button" value="Edit"></a></td>
-                                        </tr>
-                                {% endfor %}
-                        </table>
-                        </form>
+
+                        <div class="flex justify-center" style="min-height: 80vh;">
+                                <table class="table table-container">
+                                        <thead class="thead-dark">
+                                          <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Book IDs</th>
+                                            <th scope="col">Title</th>
+                                            <th scope="col">Author</th>
+                                            <th scope="col">Subject</th>
+                                            <th scope="col">Borrower</th>
+                                            <th scope="col">Position</th>
+                                            <th scope="col">State</th>
+                                            <th scope="col">Edit</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>                                  
+                                        {% for book in BookDetail %}
+                                                <tr>
+                                                        <th scope="row">1</th>
+                                                        <td class="text-left">{{book.BOOK_ID}}</td>
+                                                        <td class="text-left">{{book.TITLE}}</td>
+                                                        <td class="text-left">{{book.AUTHOR}}</td>
+                                                        <td class="text-left">{{book.SUBJECT}}</td>
+                                                        <td class="text-left">{{book.NAME}}</td>
+                                                        <td class="text-left">{{book.POSITION}}</td>
+                                                        <td class="text-left">{{book.STATE}}</td>
+                                                        <td class="text-left"><a href="/bookEdit/{{book.BOOK_ID}}"><i class="fa fa-edit"></i></a></td>
+                                                </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                </table>
+                        </div>
                 </div>
                 {% include "footer.html" %}
+
+                <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         </body>
 </html>
