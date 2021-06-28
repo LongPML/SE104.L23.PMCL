@@ -6,61 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" href="/static/assets/css/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,400;1,300;1,400&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+  <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
 
   <title>Library Management System</title>
  
   <style>
-    .slider {
-      margin-top: 50px;
-      height: 96vh;
-      background: url('https://template68194.motopreview.com/mt-demo/68100/68194/mt-content/uploads/2018/07/mt-1519-content-bg-1.jpg')
-      top center / cover no-repeat;
-      display: flex;
-      align-items: center;
-    }
-
-    .slogan-content {
-      margin: 0 350px;
-      background-color: rgba(0,0,0,0.4);
-      padding: 50px;
-    }
-
-    .slogan-content .title_slogan {
-      width: 880px;
-      height: 210px;
-      padding-bottom: 20px;
-      
-    }
-
-    .mono_text {
-      font-weight: 400;
-      font-style: normal;
-      font-family: 'Abril Fatface', cursive;
-      color: #fff;
-      font-size: 95px;
-      line-height: 1;
-      letter-spacing: 0px;
-    }
-
-    .slogan-content .para_slogan {
-      width: 880px;
-      height: 22px;
-    }
-
-    .mono_text-normal {
-      font-weight: 400;
-      font-style: normal;
-      font-family: Arial, Helvetica, sans-serif;
-      color: #fff;
-      font-size: 14px;
-      line-height: 1.6;
-      letter-spacing: 0px;
-    }
-
-    
     .popbook_list {
       width: 100%;
       background-color: #F2F2F2;
@@ -170,39 +120,28 @@
 </head>
 
   <body>
-  {% include "header.html" %}
-  <div class="slider">
-    <div class="slogan-content">
-      <div class="title_slogan">
-        <h1 class="mono_text">The Wonderfull World of Reading</h1>
-      </div>
-      <div class="para_slogan">
-        <p class="mono_text-normal">The library is a place for everyone to explore, discover, and engage</p>
-      </div>
-    </div>
-  </div>
-
+  {% include "admin-header.html" %}
   <div class="content">
     <div class="popbook_list">
       <div class="container">
         <div class="container_fluid">
-          <h4 class="pop">New Materials</h4>
+          <h4 class="pop">Collections</h4>
 
           <div class="widget">
             <hr class="divider-line" style="max-width: 100%; width: 6%;">
           </div>
 
-          <div method='GET' class="books flex flex-wrap justify-center">
+          <div method='GET' class="books flex flex-wrap">
             
               {% for book in BookInformation %}
-              <div class="book-item">
+            <div class="book-item">
               <div class="img-book">
                 <img class="book-img" src="{{book.PATH}}" alt="book"/>
               </div>
               <div class="book-name">{{book.TITLE}}</div>
               <p class="short-desc">Novel by {{book.AUTHOR}}</p>
               <div class="book_information">
-                <a href="/bookInfo/{{book.BOOK_ID}}" class="button_link">
+                <a href="/ADbookInfo/{{book.BOOK_ID}}" class="button_link">
                   <span class="button_label">MORE INFO</span>
                 </a>
               </div>
@@ -210,16 +149,12 @@
               {% endfor %}
           </div>
 
-          <div class="collections-link" style="text-align:end">
-            <a href="/collections" class="button_link">Collections <i class="fa fa-angle-double-right"></i></a>
-          </div>
-
         </div>
       </div>
     </div>
   </div>
 
-  {% include "footer.html" %}
+  {% include "admin-footer.html" %}
 
   </body>
 </html>

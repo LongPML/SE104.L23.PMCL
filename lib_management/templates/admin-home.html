@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="/static/assets/css/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,400;1,300;1,400&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <title>Library Management System</title>
  
@@ -190,22 +191,26 @@
             <hr class="divider-line" style="max-width: 100%; width: 6%;">
           </div>
 
-          <div class="books flex flex-wrap justify-center">
+          <div method='GET' class="books flex flex-wrap justify-center">
             
               {% for book in BookInformation %}
-              <div class="book-item">
+            <div class="book-item">
               <div class="img-book">
                 <img class="book-img" src="{{book.PATH}}" alt="book"/>
               </div>
               <div class="book-name">{{book.TITLE}}</div>
               <p class="short-desc">Novel by {{book.AUTHOR}}</p>
               <div class="book_information">
-                <a href="" class="button_link">
+                <a href="/ADbookInfo/{{book.BOOK_ID}}" class="button_link">
                   <span class="button_label">MORE INFO</span>
                 </a>
               </div>
             </div>
               {% endfor %}
+          </div>
+
+          <div class="collections-link" style="text-align:end">
+            <a href="/admin-collections" class="button_link">Collections <i class="fa fa-angle-double-right"></i></a>
           </div>
 
         </div>
