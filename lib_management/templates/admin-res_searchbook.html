@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,400;1,300;1,400&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
 
-  <title>Library Management System</title>
+  <title>Book List</title>
  
   <style>
     .popbook_list {
@@ -121,20 +121,20 @@
 </head>
 
   <body>
-  {% include "header.html" %}
+  {% include "admin-header.html" %}
   <div class="content">
     <div class="popbook_list">
       <div class="container">
         <div class="container_fluid">
-          <h4 class="pop">Collections</h4>
+          <h4 class="pop">Result</h4>
 
           <div class="widget">
             <hr class="divider-line" style="max-width: 100%; width: 6%;">
           </div>
 
-          <div method='GET' class="books flex flex-wrap">
+          <div class="books flex flex-wrap">
             
-              {% for book in BookInformation %}
+              {% for book in BookDetail %}
             <div class="book-item">
               <div class="img-book">
                 <img class="book-img" src="{{book.PATH}}" alt="book"/>
@@ -155,7 +155,7 @@
     </div>
   </div>
 
-  {% include "footer.html" %}
+  {% include "admin-footer.html" %}
 
   </body>
 </html>

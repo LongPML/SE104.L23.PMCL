@@ -39,12 +39,14 @@
             <!-- End: Nav -->
 
             <!-- Begin: Search Book -->
-            <div class="search-book">
-                <input class="search-text" type="text" placeholder="Search books">
-                <div class="search_btn_block">
-                    <input class="search_btn" type="submit" value="SEARCH">
-                </div>
-            </div>
+            <form method="POST" action="ADSearchBook" class="search-book">
+                {% csrf_token %}
+                    <input class="search-text" type="text" name="book" placeholder="Enter Name" onkeyup="this.value = this.value.toUpperCase()">
+                    <div class="search_btn_block">
+                        <button class="search_btn" type="submit">SEARCH</button>
+                    </div>
+            </form>
+            
             <!-- End: Search Book -->
 
             <!-- Begin: Login -->

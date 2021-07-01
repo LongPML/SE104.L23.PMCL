@@ -39,12 +39,12 @@
                                 padding: 50px 0 0;
                         }
 
-                        form {
+                        .book_add {
                                 display: flex;
                                 flex-direction: column;
                         }
 
-                        form div {
+                        .book_add div {
                                 margin-bottom: 20px;
                         }
 
@@ -90,7 +90,7 @@
                                 <div class="add_book">
                                         <h2 class="add_title">Book Information</h2>
                                         <div class="input">
-                                                <form method="POST">
+                                                <form class="book_add" method="POST">
                                                         {% csrf_token %}
                                                         <div>
                                                                 <label class="label_text">Book Name</label>

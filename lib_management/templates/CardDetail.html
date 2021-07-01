@@ -15,7 +15,7 @@
                                 background-repeat: no-repeat;
                                 background-size: cover;
                         }
-                        #AddTitle { 
+                        #DetailTitle { 
                                 text-align: center;
                                 padding: 40px 0;
                                 color: #fff;
@@ -85,7 +85,7 @@
         <body>
                 {% include "admin-header.html" %}
                 <div class="card-detail"> 
-                        <h1 id="AddTitle">Borrow Card Information</h1>
+                        <h1 id="DetailTitle">Borrow Card Information</h1>
 
                         <form method="POST" class="search flex justify-center align-center">
                             {% csrf_token %}

@@ -13,20 +13,8 @@ conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'
 cursor = conn.cursor()
 # Create your views here.
 def home_view(request, *args, **kwargs):
-    if request.method=="GET":
-        result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE, B.PATH
-                                    FROM BOOKS B     
-                                    left JOIN AUTHORS_BOOKS AB
-                                    ON B.BOOK_ID = AB.BOOK_ID left JOIN AUTHORS A
-                                    ON AB.AUTHOR_ID  = A.AUTHOR_ID
-                                    left JOIN SUBJECTS_BOOKS SB
-                                    ON B.BOOK_ID = SB.BOOK_ID left JOIN SUBJECTS S
-                                    ON SB.SUBJECT_ID = S.SUBJECT_ID
-                                    LEFT JOIN BORROWCARDS BC 
-                                    ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
-                                    ON BC.LIBCARD_ID = LC.LIBCARD_ID""")
-        result = cursor.fetchall()
-        return render(request, "index.html", {'BookInformation':result})
+
+    return render(request, "index.html", {})
 
 def admin_home(request, *args, **kwargs):
     interested_authors = cursor.execute(f""" select *
@@ -67,7 +55,7 @@ def admin_home(request, *args, **kwargs):
                                     ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
                                     ON BC.LIBCARD_ID = LC.LIBCARD_ID""")
         result = cursor.fetchall()
-    return render(request, "admin-home.html", {'I_Authors':interested_authors,'I_Subjects':interested_subjects,'BookInformation':result})
+        return render(request, "admin-home.html", {'I_Authors':interested_authors,'I_Subjects':interested_subjects,'BookInformation':result})
 
 def BookAdd(request, *args, **kwargs):
     Book = Books()
@@ -106,7 +94,9 @@ def BookAdd(request, *args, **kwargs):
     else:
         return render(request, "BookAdd.html", {})
 
+
 def BookEdit(request, id_b):
+
     result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE, B.PATH
                                 FROM BOOKS B     
                                 JOIN AUTHORS_BOOKS AB
@@ -170,7 +160,6 @@ def CardDetail(request, *args, **kwargs):
         return render(request, 'CardDetail.html', {'CardDetail':result})
 
 def CardEdit(request, id_bc):
-
     result = cursor.execute(f"""select BC.BORROWCARD_ID, LC.NAME, B.TITLE , BC.DUE_DATE, BC.RETURN_DATE
                                from BORROWCARDS BC join LIBCARDS LC 
                                on BC.LIBCARD_ID = LC.LIBCARD_ID 
@@ -239,20 +228,35 @@ def BookDetail(request):
 
     if request.method=="POST":
         key = request.POST.get("key")
-        search_result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE
-                                    FROM BOOKS B     
-                                    left JOIN AUTHORS_BOOKS AB
-                                    ON B.BOOK_ID = AB.BOOK_ID left JOIN AUTHORS A
-                                    ON AB.AUTHOR_ID  = A.AUTHOR_ID
-                                    left JOIN SUBJECTS_BOOKS SB
-                                    ON B.BOOK_ID = SB.BOOK_ID left JOIN SUBJECTS S
-                                    ON SB.SUBJECT_ID = S.SUBJECT_ID
-                                    LEFT JOIN BORROWCARDS BC 
-                                    ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
-                                    ON BC.LIBCARD_ID = LC.LIBCARD_ID
-                                    WHERE B.BOOK_ID LIKE '%{key}%' or A.NAME LIKE N'%{key}%' OR S.NAME LIKE N'%{key}%' or B.TITLE LIKE N'%{key}%'""")
-        return render(request, "BookDetail.html", {'BookDetail':search_result})
-
+        if key is not None:
+            search_result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE, B.PATH
+                                        FROM BOOKS B     
+                                        left JOIN AUTHORS_BOOKS AB
+                                        ON B.BOOK_ID = AB.BOOK_ID left JOIN AUTHORS A
+                                        ON AB.AUTHOR_ID  = A.AUTHOR_ID
+                                        left JOIN SUBJECTS_BOOKS SB
+                                        ON B.BOOK_ID = SB.BOOK_ID left JOIN SUBJECTS S
+                                        ON SB.SUBJECT_ID = S.SUBJECT_ID
+                                        LEFT JOIN BORROWCARDS BC 
+                                        ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
+                                        ON BC.LIBCARD_ID = LC.LIBCARD_ID
+                                        WHERE B.BOOK_ID LIKE '%{key}%' or A.NAME LIKE N'%{key}%' OR S.NAME LIKE N'%{key}%' or B.TITLE LIKE N'%{key}%'""")
+            return render(request, "BookDetail.html", {'BookDetail':search_result})
+        else:
+            key = request.POST.get("book")
+            search_result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE, B.PATH
+                                        FROM BOOKS B     
+                                        left JOIN AUTHORS_BOOKS AB
+                                        ON B.BOOK_ID = AB.BOOK_ID left JOIN AUTHORS A
+                                        ON AB.AUTHOR_ID  = A.AUTHOR_ID
+                                        left JOIN SUBJECTS_BOOKS SB
+                                        ON B.BOOK_ID = SB.BOOK_ID left JOIN SUBJECTS S
+                                        ON SB.SUBJECT_ID = S.SUBJECT_ID
+                                        LEFT JOIN BORROWCARDS BC 
+                                        ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
+                                        ON BC.LIBCARD_ID = LC.LIBCARD_ID
+                                        WHERE B.BOOK_ID LIKE '%{key}%' or A.NAME LIKE N'%{key}%' OR S.NAME LIKE N'%{key}%' or B.TITLE LIKE N'%{key}%'""")
+            return render(request, "res_searchbook.html", {'BookDetail':search_result})
     if request.method=="GET":
         result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE
                                     FROM BOOKS B     
@@ -327,6 +331,22 @@ def collections(request, *args, **kwargs):
                                     ON BC.LIBCARD_ID = LC.LIBCARD_ID""")
         result = cursor.fetchall()
         return render(request, "collections.html", {'BookInformation':result})
+
+    if request.method=="POST":
+        key = request.POST.get("book")
+        search_result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE, B.PATH
+                                    FROM BOOKS B     
+                                    left JOIN AUTHORS_BOOKS AB
+                                    ON B.BOOK_ID = AB.BOOK_ID left JOIN AUTHORS A
+                                    ON AB.AUTHOR_ID  = A.AUTHOR_ID
+                                    left JOIN SUBJECTS_BOOKS SB
+                                    ON B.BOOK_ID = SB.BOOK_ID left JOIN SUBJECTS S
+                                    ON SB.SUBJECT_ID = S.SUBJECT_ID
+                                    LEFT JOIN BORROWCARDS BC 
+                                    ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
+                                    ON BC.LIBCARD_ID = LC.LIBCARD_ID
+                                    WHERE B.BOOK_ID LIKE '%{key}%' or A.NAME LIKE N'%{key}%' OR S.NAME LIKE N'%{key}%' or B.TITLE LIKE N'%{key}%'""")
+        return render(request, "res_searchbook.html", {'BookDetail':search_result})
 
 def ADcollections(request, *args, **kwargs):
     if request.method=="GET":

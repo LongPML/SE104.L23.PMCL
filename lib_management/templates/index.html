@@ -61,9 +61,8 @@
     }
 
     
-    .popbook_list {
+    .book_list {
       width: 100%;
-      background-color: #F2F2F2;
       padding: 130px 0;
     }
 
@@ -76,7 +75,7 @@
       width: 1200px;
     }
 
-    .pop {
+    .title_list {
       font-weight: 400;
       font-style: normal;
       font-family: 'Abril Fatface', cursive;
@@ -174,7 +173,7 @@
   <div class="slider">
     <div class="slogan-content">
       <div class="title_slogan">
-        <h1 class="mono_text">The Wonderfull World of Reading</h1>
+        <h1 class="mono_text">The Wonderful World of Reading</h1>
       </div>
       <div class="para_slogan">
         <p class="mono_text-normal">The library is a place for everyone to explore, discover, and engage</p>
@@ -183,18 +182,20 @@
   </div>
 
   <div class="content">
-    <div class="popbook_list">
+
+    <!-- Danh sách 4 cuốn sách mới -->
+    <div class="book_list" style="background-color: #f2f2f2;">
       <div class="container">
         <div class="container_fluid">
-          <h4 class="pop">New Materials</h4>
+          <h4 class="title_list">New Materials</h4>
 
           <div class="widget">
             <hr class="divider-line" style="max-width: 100%; width: 6%;">
           </div>
 
-          <div method='GET' class="books flex flex-wrap justify-center">
+          <div class="books flex flex-wrap justify-center">
             
-              {% for book in BookInformation %}
+              {% for book in NewBooks %}
               <div class="book-item">
               <div class="img-book">
                 <img class="book-img" src="{{book.PATH}}" alt="book"/>
@@ -217,6 +218,61 @@
         </div>
       </div>
     </div>
+
+    <!-- Danh sách 4 cuốn sách được mượn nhiều nhất -->
+    <div class="book_list" style="background-color: #fff;">
+      <div class="container">
+        <div class="container_fluid">
+          <h4 class="title_list">Popular Books</h4>
+
+          <div class="widget">
+            <hr class="divider-line" style="max-width: 100%; width: 6%;">
+          </div>
+
+          <div class="books flex flex-wrap justify-center">
+            
+              {% for book in PopularBooks %}
+              <div class="book-item">
+              <div class="img-book">
+                <img class="book-img" src="{{book.PATH}}" alt="book"/>
+              </div>
+              <div class="book-name">{{book.TITLE}}</div>
+              <p class="short-desc">Novel by {{book.AUTHOR}}</p>
+              <div class="book_information">
+                <a href="/bookInfo/{{book.BOOK_ID}}" class="button_link">
+                  <span class="button_label">MORE INFO</span>
+                </a>
+              </div>
+            </div>
+              {% endfor %}
+          </div>
+
+          <div class="collections-link" style="text-align:end">
+            <a href="/collections" class="button_link">Collections <i class="fa fa-angle-double-right"></i></a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Danh sách các chủ đề, tác giả được mượn nhiều nhất -->
+    <div class="book_list" style="background-color: #f2f2f2;">
+      <div class="container">
+        <div class="container_fluid">
+          <h4 class="title_list">Popular Topics, Authors</h4>
+
+          <div class="widget">
+            <hr class="divider-line" style="max-width: 100%; width: 6%;">
+          </div>
+
+          <div class="books flex flex-wrap justify-center">
+            
+              
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   {% include "footer.html" %}

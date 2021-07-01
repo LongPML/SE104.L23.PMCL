@@ -8,14 +8,14 @@
 
                 <style>
                         
-                        .card-detail{
+                        .book-detail{
                                 margin-top: var(--header-height);
                                 background-image: url('https://template68194.motopreview.com/mt-demo/68100/68194/mt-content/uploads/2018/07/mt-1519-content-bg-3.jpg');
                                 background-position: center;
                                 background-repeat: no-repeat;
                                 background-size: cover;
                         }
-                        #AddTitle { 
+                        #DetailTitle { 
                                 text-align: center;
                                 padding: 40px 0;
                                 color: #fff;
@@ -29,7 +29,7 @@
                         }
                         table.center {margin-left: auto; margin-right: auto;
                         }
-                        .card_detail input{
+                        .book_detail input{
                             font-size: 20px
                         }
                         input.typesearch{
@@ -84,10 +84,10 @@
         </head>
         <body>
                 {% include "admin-header.html" %}
-                <div class="card-detail"> 
-                        <h1 id="AddTitle">Book Information</h1>
+                <div class="book-detail"> 
+                        <h1 id="DetailTitle">Book Information</h1>
 
-                        <form method="POST" class="search flex justify-center align-center">
+                        <form method="POST" action="BookDetail" class="search flex justify-center align-center">
                             {% csrf_token %}
                                 <input class="search-input" type="text" name="key" placeholder="Enter Name or Library Card's ID" onkeyup="this.value = this.value.toUpperCase();">
                                 <button class="search-btn" type="submit">Search</button>
