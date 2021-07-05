@@ -15,10 +15,11 @@
         <div id="header">
             <!-- Begin: Nav -->
             <ul id="nav">
-                <div class="logo">
+                <div class="logo" style="padding-right: 10px;">
                     <a href="/admin"><img src="https://template68194.motopreview.com/mt-demo/68100/68194/mt-content/uploads/2018/07/mt-1519-logo.png" alt="Logo" style="width: 45px; height: 45px" ></a>
                 </div>
                 <li><a href="/admin">Home</a></li>
+                <li><a href="/admin-collections">Colections</a></li>
                 <li>
                     <a href="">
                         Admin
@@ -38,12 +39,14 @@
             <!-- End: Nav -->
 
             <!-- Begin: Search Book -->
-            <div class="search-book">
-                <input class="search-text" type="text" placeholder="Search books">
-                <div class="search_btn_block">
-                    <input class="search_btn" type="submit" value="SEARCH">
-                </div>
-            </div>
+            <form method="POST" action="ADSearchBook" class="search-book">
+                {% csrf_token %}
+                    <input class="search-text" type="text" name="book" placeholder="Enter Name" onkeyup="this.value = this.value.toUpperCase()">
+                    <div class="search_btn_block">
+                        <button class="search_btn" type="submit">SEARCH</button>
+                    </div>
+            </form>
+            
             <!-- End: Search Book -->
 
             <!-- Begin: Login -->

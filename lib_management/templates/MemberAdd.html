@@ -39,12 +39,12 @@
                                 padding: 50px 0 0;
                         }
 
-                        form {
+                        .libcard_add {
                                 display: flex;
                                 flex-direction: column;
                         }
 
-                        form div {
+                        .libcard_add div {
                                 margin-bottom: 20px;
                         }
 
@@ -62,6 +62,7 @@
                                 width: 430px;
                                 height: 60px;
                                 padding: 18px 20px;
+                                font-family: monospace;
                         }
                         .AddButton {
                                 text-align: center; 
@@ -89,7 +90,7 @@
                                 <div class="add_libcard">
                                         <h2 class="add_title">Member Information</h2>
                                         <div class="input">
-                                                <form method="POST">
+                                                <form class="libcard_add" method="POST">
                                                         {% csrf_token %}
                                                         <div>
                                                                 <label class="label_text">Name</label>

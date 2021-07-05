@@ -24,7 +24,7 @@
                                 padding: 130px 0;
                         }
 
-                        .content .add_book {
+                        .content .add_card {
                                 margin: 0 350px;
                                 height: 500px;
                         }
@@ -39,12 +39,12 @@
                                 padding: 50px 0 0;
                         }
 
-                        form {
+                        .card_add {
                                 display: flex;
                                 flex-direction: column;
                         }
 
-                        form div {
+                        .card_add div {
                                 margin-bottom: 20px;
                         }
 
@@ -62,6 +62,7 @@
                                 width: 430px;
                                 height: 60px;
                                 padding: 18px 20px;
+                                font-family: monospace;
                         }
                         .AddButton {
                                 text-align: center; 
@@ -86,10 +87,10 @@
                 {% include "admin-header.html" %}
                 <div class="content">
                         <div class="content-wrapper">
-                                <div class="add_book">
+                                <div class="add_card">
                                         <h2 class="add_title">Borrow Card Information</h2>
                                         <div class="input">
-                                                <form method="POST">
+                                                <form class="card_add" method="POST">
                                                         {% csrf_token %}
                                                         <div>
                                                                 <label class="label_text">Book ID</label>

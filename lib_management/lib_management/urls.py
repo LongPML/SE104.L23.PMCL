@@ -17,4 +17,8 @@ urlpatterns = [
     path('bookDetail/',BookDetail),
     path('login/',Login),
     path('admin/',admin_home),
+    path('bookInfo/<int:id_b>',bookInformation),
+    path('ADbookInfo/<int:id_b>',ADbookInformation),
+    path('collections',collections),
+    path('admin-collections',ADcollections),
 ]
