@@ -6,8 +6,8 @@ import datetime
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'
-                      'Server=NHANCSER\ADMIN;' 
-                      # 'Server=ADMIN;'
+                      # 'Server=NHANCSER\ADMIN;' 
+                      'Server=ADMIN;'
                       'Database=QLTV;'
                       'Trusted_Connection=yes;')
 cursor = conn.cursor()
