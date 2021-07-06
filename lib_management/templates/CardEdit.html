@@ -39,12 +39,12 @@
                                 padding: 50px 0 0;
                         }
 
-                        form {
+                        .edit-card {
                                 display: flex;
                                 flex-direction: column;
                         }
 
-                        form div {
+                        .edit-card div {
                                 margin-bottom: 20px;
                         }
 
@@ -91,7 +91,7 @@
                                 <div class="update_book"> 
                                         <h2 class="update_title">Borrow Card Information</h2>
                                         <div class="input">
-                                                <form method="POST" action="cardUpdate">
+                                                <form method="POST" class="edit-card" action="cardUpdate">
                                                 {% for card in CardDetail %}
                                                 {% csrf_token %}
                                                 <div>

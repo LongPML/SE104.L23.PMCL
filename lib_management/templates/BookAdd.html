@@ -112,9 +112,20 @@
                                                                 <label class="label_text">Image Source</label>
                                                                 <input class="AddInput" name="path" type="text" placeholder="Path to image"/>
                                                         </div>
+
+                                                        <!-- <div> -->
+                                                                {% if messages %}
+                                                                {% for message in messages %}
+                                                                <div class="alert alert-danger" role="alert" style="color: red;">
+                                                                        {{ message }}
+                                                                </div>
+                                                                {% endfor %}
+                                                                {% endif %}
+                                                        <!-- </div> -->
+
                                                         <div>
                                                                 <label class="label_text"></label>
-                                                                <button class="AddButton" type="submit" onclick="return alert('Add Book Successfully!')">ADD</button>
+                                                                <button class="AddButton" type="submit">ADD</button>
                                                         </div>
                                                 </form>
                                         </div>

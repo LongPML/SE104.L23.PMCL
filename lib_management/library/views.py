@@ -5,6 +5,8 @@ import pyodbc
 import datetime
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
+from django.contrib import messages
+
 conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'
                       'Server=NHANCSER\ADMIN;' 
                     #   'Server=ADMIN;'
@@ -316,10 +318,18 @@ def Login(request, *args, **kwargs):
     username = request.POST.get("username")
     password = request.POST.get("password")
     if username != None and password != None:
-        match = cursor.execute(f"""select PASSWORD from ACCOUNT WHERE USERNAME = '{username}'""").fetchall()[0][0]
-        if password == match:
-            # return admin_home(request)
-            return redirect('/admin/')
+        try:
+            match = cursor.execute(f"""select PASSWORD from ACCOUNT WHERE USERNAME = '{username}'""").fetchall()[0][0]
+            # match = 'ADMIN'
+            if password == match:
+                # return admin_home(request)
+                return redirect('/admin')
+            else:
+                messages.error(request,'Username or password is not correct!')
+                return redirect('/login')
+        except:
+                messages.error(request,'Username or password is not correct!')
+                return redirect('/login')
     return render(request, "Login.html", {})
 
 def bookInformation(request, id_b):
@@ -357,49 +367,27 @@ def ADbookInformation(request, id_b):
 
 def collections(request, *args, **kwargs):
     if request.method=="GET":
-        result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE, B.PATH
+        result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, B.POSITION, B.STATE, B.PATH
                                     FROM BOOKS B     
                                     left JOIN AUTHORS_BOOKS AB
                                     ON B.BOOK_ID = AB.BOOK_ID left JOIN AUTHORS A
                                     ON AB.AUTHOR_ID  = A.AUTHOR_ID
                                     left JOIN SUBJECTS_BOOKS SB
                                     ON B.BOOK_ID = SB.BOOK_ID left JOIN SUBJECTS S
-                                    ON SB.SUBJECT_ID = S.SUBJECT_ID
-                                    LEFT JOIN BORROWCARDS BC 
-                                    ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
-                                    ON BC.LIBCARD_ID = LC.LIBCARD_ID""")
+                                    ON SB.SUBJECT_ID = S.SUBJECT_ID""")
         result = cursor.fetchall()
         return render(request, "collections.html", {'BookInformation':result})
 
-    if request.method=="POST":
-        key = request.POST.get("book")
-        search_result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE, B.PATH
-                                    FROM BOOKS B     
-                                    left JOIN AUTHORS_BOOKS AB
-                                    ON B.BOOK_ID = AB.BOOK_ID left JOIN AUTHORS A
-                                    ON AB.AUTHOR_ID  = A.AUTHOR_ID
-                                    left JOIN SUBJECTS_BOOKS SB
-                                    ON B.BOOK_ID = SB.BOOK_ID left JOIN SUBJECTS S
-                                    ON SB.SUBJECT_ID = S.SUBJECT_ID
-                                    LEFT JOIN BORROWCARDS BC 
-                                    ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
-                                    ON BC.LIBCARD_ID = LC.LIBCARD_ID
-                                    WHERE B.BOOK_ID LIKE '%{key}%' or A.NAME LIKE N'%{key}%' OR S.NAME LIKE N'%{key}%' or B.TITLE LIKE N'%{key}%'""")
-        return render(request, "res_searchbook.html", {'BookDetail':search_result})
-
 def ADcollections(request, *args, **kwargs):
     if request.method=="GET":
-        result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE, B.PATH
+        result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT,B.POSITION, B.STATE, B.PATH
                                     FROM BOOKS B     
                                     left JOIN AUTHORS_BOOKS AB
                                     ON B.BOOK_ID = AB.BOOK_ID left JOIN AUTHORS A
                                     ON AB.AUTHOR_ID  = A.AUTHOR_ID
                                     left JOIN SUBJECTS_BOOKS SB
                                     ON B.BOOK_ID = SB.BOOK_ID left JOIN SUBJECTS S
-                                    ON SB.SUBJECT_ID = S.SUBJECT_ID
-                                    LEFT JOIN BORROWCARDS BC 
-                                    ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
-                                    ON BC.LIBCARD_ID = LC.LIBCARD_ID""")
+                                    ON SB.SUBJECT_ID = S.SUBJECT_ID""")
         result = cursor.fetchall()
         return render(request, "admin-collections.html", {'BookInformation':result})
 

@@ -39,7 +39,7 @@
                                 padding: 50px 0 0;
                         }
 
-                        form {
+                        .edit-book {
                                 display: flex;
                         }
 
@@ -95,7 +95,7 @@
                                         <h2 class="update_title">Book Information</h2>
                                         <div class="input">
                                                 {% for book in BookDetail %}
-                                                <form method="POST" action="bookUpdate">
+                                                <form method="POST" class="edit-book" action="bookUpdate">
                                                 {% csrf_token %}
                                                 <div class="input_col1">
                                                         <div>
@@ -134,7 +134,7 @@
                                                                 <input class="UpdateInput" name="state" type="number" placeholder="State" value="{{book.STATE}}" />
                                                         </div>
                                                         <div> 
-                                                                <label class="label_text">Imgae Source</label>
+                                                                <label class="label_text">Image Source</label>
                                                                 <input class="UpdateInput" name="path" type="text" placeholder="Topic" value="{{book.PATH}}">
                                                         </div>
                                                 </div>
