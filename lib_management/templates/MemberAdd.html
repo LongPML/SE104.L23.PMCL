@@ -108,9 +108,19 @@
                                                                 <label class="label_text">Class</label>
                                                                 <input class="AddInput" name="class" type="text" placeholder="Class" />
                                                         </div>
+                                                        <div class="flex">
+                                                                <label class="label_text"></label>
+                                                                {% if messages %}
+                                                                {% for message in messages %}
+                                                                <div class="alert alert-danger" role="alert" style="color: red;">
+                                                                  {{ message }}
+                                                                </div>
+                                                                {% endfor %}
+                                                                {% endif %}
+                                                        </div>
                                                         <div>
                                                                 <label class="label_text"></label>
-                                                                <button class="AddButton" type="submit" onclick="return alert('Add Book Successfully!')">ADD</button>
+                                                                <button class="AddButton" type="submit">ADD</button>
                                                         </div>
                                                 </form>
                                         </div>

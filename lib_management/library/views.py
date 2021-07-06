@@ -72,40 +72,44 @@ def admin_home(request, *args, **kwargs):
     return render(request, "admin-home.html", {'BookInformation':result,'PopularBooks':PopularBooks,'NewBooks':NewBooks})
 
 def BookAdd(request, *args, **kwargs):
-    Book = Books()
-    Book.title = request.POST.get('title')
-    Book.position = request.POST.get('position')
-    Book.path = request.POST.get('path')
-    Author = Authors()
-    Authors.name = request.POST.get('authorname')
-    author_names = [i[0] for i in cursor.execute(f"SELECT NAME FROM AUTHORS")]
-    Subject = Subjects()
-    Subject.name = request.POST.get('subjectname')
-    subject_names = [i[0] for i in cursor.execute(f"SELECT NAME FROM SUBJECTS")]
-    if Book.title != None and Book.position !=None and Authors.name != None and Subject.name != None and Book.title != "" and Book.position !="" and Authors.name != "" and Subject.name != "":
-        if Book.path != None and Book.path != "":
-            cursor.execute(f""" insert into BOOKS (TITLE, STATE, POSITION, PATH)
-                         values(N'{Book.title}',{Book.state},N'{Book.position}','{Book.path}')""")
+    if request.method=="POST":
+        Book = Books()
+        Book.title = request.POST.get('title')
+        Book.position = request.POST.get('position')
+        Book.path = request.POST.get('path')
+        Author = Authors()
+        Authors.name = request.POST.get('authorname')
+        author_names = [i[0] for i in cursor.execute(f"SELECT NAME FROM AUTHORS")]
+        Subject = Subjects()
+        Subject.name = request.POST.get('subjectname')
+        subject_names = [i[0] for i in cursor.execute(f"SELECT NAME FROM SUBJECTS")]
+        if Book.title != None and Book.position !=None and Authors.name != None and Subject.name != None and Book.title != "" and Book.position !="" and Authors.name != "" and Subject.name != "":
+            if Book.path != None and Book.path != "":
+                cursor.execute(f""" insert into BOOKS (TITLE, STATE, POSITION, PATH)
+                            values(N'{Book.title}',{Book.state},N'{Book.position}','{Book.path}')""")
+                cursor.commit()
+            else:
+                cursor.execute(f"""insert into BOOKS (TITLE, STATE, POSITION)
+                            values(N'{Book.title}',{Book.state},N'{Book.position}')""")
+                cursor.commit()                    
+            if Authors.name not in author_names:
+                cursor.execute(f"insert into AUTHORS values(N'{Authors.name}')")
+                cursor.commit()
+            if Subject.name not in subject_names:
+                cursor.execute(f"insert into SUBJECTS values(N'{Subject.name}')")
+                cursor.commit()
+            last_book_id = [i[0] for i in cursor.execute(f"SELECT BOOK_ID FROM BOOKS WHERE TITLE = N'{Book.title}' ")][-1]
+            last_author_id = [i[0] for i in cursor.execute(f"SELECT AUTHOR_ID FROM AUTHORS WHERE NAME = N'{Authors.name}' ")][-1]
+            last_subject_id = [i[0] for i in cursor.execute(f"SELECT SUBJECT_ID FROM SUBJECTS WHERE NAME = N'{Subject.name}' ")][-1]
+            cursor.execute(f"insert into AUTHORS_BOOKS values({last_author_id},{last_book_id})")
             cursor.commit()
+            cursor.execute(f"insert into SUBJECTS_BOOKS values({last_subject_id},{last_book_id})")
+            cursor.commit()
+            messages.success(request,'Add Book Sucessfully!')
+            return redirect('/book/add')
         else:
-            cursor.execute(f"""insert into BOOKS (TITLE, STATE, POSITION)
-                         values(N'{Book.title}',{Book.state},N'{Book.position}')""")
-            cursor.commit()                    
-        if Authors.name not in author_names:
-            cursor.execute(f"insert into AUTHORS values(N'{Authors.name}')")
-            cursor.commit()
-        if Subject.name not in subject_names:
-            cursor.execute(f"insert into SUBJECTS values(N'{Subject.name}')")
-            cursor.commit()
-        last_book_id = [i[0] for i in cursor.execute(f"SELECT BOOK_ID FROM BOOKS WHERE TITLE = N'{Book.title}' ")][-1]
-        last_author_id = [i[0] for i in cursor.execute(f"SELECT AUTHOR_ID FROM AUTHORS WHERE NAME = N'{Authors.name}' ")][-1]
-        last_subject_id = [i[0] for i in cursor.execute(f"SELECT SUBJECT_ID FROM SUBJECTS WHERE NAME = N'{Subject.name}' ")][-1]
-        cursor.execute(f"insert into AUTHORS_BOOKS values({last_author_id},{last_book_id})")
-        cursor.commit()
-        cursor.execute(f"insert into SUBJECTS_BOOKS values({last_subject_id},{last_book_id})")
-        cursor.commit()
-        messages.success(request,'Add Book Sucessfully!')
-        return redirect('/book/add')
+            messages.error(request,'Add Book Unsucessfully!')
+            return redirect('/book/add')
     return render(request, "BookAdd.html", {})
 
 
@@ -137,21 +141,25 @@ def BookUpdate(request):
     return redirect('/bookDetail/')
 
 def CardAdd(request, *args, **kwargs):
-    card = Borrowcards()
-    card.bookid = request.POST.get('bookid')
-    card.libcardid = request.POST.get('libcardid')
-    card.borrow_date = request.POST.get('borrow_date')
-    card.due_date = request.POST.get('due_date')
-    # card.borrow_date = datetime.datetime.strptime(request.POST.get('date'),"%Y-%m-%d").date()
-    if card.bookid != None and card.libcardid != None and card.borrow_date != "" and card.due_date != "" and card.bookid != "" and card.libcardid != "":
-        cursor.execute(f"""insert into BORROWCARDS (BOOK_ID, LIBCARD_ID, BORROW_DATE, DUE_DATE, RETURN_DATE)
-                         VALUES({card.bookid},{card.libcardid},'{card.borrow_date}','{card.due_date}',{card.return_date})""")
-        cursor.commit()
-        cursor.execute(f"""update BOOKS set STATE = 0 WHERE BOOK_ID = {card.bookid}""")
-        cursor.commit()
-        return render(request, "CardAdd.html", {})
-    else:
-        return render(request, "CardAdd.html", {})
+    if request.method=="POST":
+        card = Borrowcards()
+        card.bookid = request.POST.get('bookid')
+        card.libcardid = request.POST.get('libcardid')
+        card.borrow_date = request.POST.get('borrow_date')
+        card.due_date = request.POST.get('due_date')
+        # card.borrow_date = datetime.datetime.strptime(request.POST.get('date'),"%Y-%m-%d").date()
+        if card.bookid != None and card.libcardid != None and card.borrow_date != "" and card.due_date != "" and card.bookid != "" and card.libcardid != "":
+            cursor.execute(f"""insert into BORROWCARDS (BOOK_ID, LIBCARD_ID, BORROW_DATE, DUE_DATE, RETURN_DATE)
+                            VALUES({card.bookid},{card.libcardid},'{card.borrow_date}','{card.due_date}',{card.return_date})""")
+            cursor.commit()
+            cursor.execute(f"""update BOOKS set STATE = 0 WHERE BOOK_ID = {card.bookid}""")
+            cursor.commit()
+            messages.success(request,'Add Borrow Card Sucessfully!')
+            return redirect('/card/add')
+        else:
+            messages.error(request,'Add Borrow Card Unsucessfully!')
+            return redirect('/card/add')
+    return render(request, "CardAdd.html", {})
 
 def CardDetail(request, *args, **kwargs):
     if request.method=="POST":
@@ -212,18 +220,22 @@ def CardUpdate(request):
     return redirect('/cardDetail/')
 
 def MemberAdd(request, *args, **kwargs):
-    member = Libcards()
-    member.NAME = request.POST.get('name')
-    member.AGES = request.POST.get('age')
-    member.ADDRESS = request.POST.get('address')
-    member.CLASS = request.POST.get('class')
-    if member.NAME != None and member.AGES != None and member.ADDRESS != None and member.CLASS != None and member.NAME != "" and member.AGES != "" and member.ADDRESS != "" and member.CLASS != "":
-        cursor.execute(f"""insert into LIBCARDS (NAME, AGES, ADDRESS, CLASS) 
-                         values(N'{member.NAME}',{member.AGES},N'{member.ADDRESS}',N'{member.CLASS}')""")
-        cursor.commit()
-        return render(request, "MemberAdd.html", {})
-    else:
-        return render(request, "MemberAdd.html", {})
+    if request.method=="POST":
+        member = Libcards()
+        member.NAME = request.POST.get('name')
+        member.AGES = request.POST.get('age')
+        member.ADDRESS = request.POST.get('address')
+        member.CLASS = request.POST.get('class')
+        if member.NAME != None and member.AGES != None and member.ADDRESS != None and member.CLASS != None and member.NAME != "" and member.AGES != "" and member.ADDRESS != "" and member.CLASS != "":
+            cursor.execute(f"""insert into LIBCARDS (NAME, AGES, ADDRESS, CLASS) 
+                            values(N'{member.NAME}',{member.AGES},N'{member.ADDRESS}',N'{member.CLASS}')""")
+            cursor.commit()
+            messages.success(request,'Add Library Card Sucessfully!')
+            return redirect('/member/add')
+        else:
+            messages.error(request,'Add Library Card Unsucessfully!')
+            return redirect('/member/add')
+    return render(request, "MemberAdd.html", {})
 
 def MemberDetail(request):
     if request.method=="POST":
