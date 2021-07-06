@@ -100,8 +100,6 @@
                                             <th scope="col">#</th>                                            
                                             <th scope="col">Topic</th> <!-- Chủ đề được mượn nhiều nhất -->
                                             <th scope="col">Number of books</th> <!-- Tổng số cuốn sách ở trong csdl theo chủ đề đó -->
-                                            <th scope="col">Title</th> <!-- Tên cuốn sách được mượn nhiều nhất theo chủ đề đó -->
-                                            <th scope="col">Author</th> <!-- Tên tác giả theo cuốn sách đó -->
                                             <th scope="col">Number of borrowing</th> <!-- Số lần mượn theo chủ đề đó -->
                                           </tr>
                                         </thead>
@@ -111,8 +109,6 @@
                                                         <th scope="row">1</th>
                                                         <td class="text-left">{{item.TOPIC}}</td>
                                                         <td class="text-left">{{item.NumOfBooks}}</td>
-                                                        <td class="text-left">{{item.TITLE}}</td>
-                                                        <td class="text-left">{{item.AUTHOR}}</td>
                                                         <td class="text-left">{{item.NumOfBorrowing}}</td>
                                                 </tr>
                                         {% endfor %}
