@@ -87,9 +87,9 @@
                 <div class="book-detail"> 
                         <h1 id="DetailTitle">Book Information</h1>
 
-                        <form method="POST" action="BookDetail" class="search flex justify-center align-center">
+                        <form method="POST" class="search flex justify-center align-center">
                             {% csrf_token %}
-                                <input class="search-input" type="text" name="key" placeholder="Enter Name or Library Card's ID" onkeyup="this.value = this.value.toUpperCase();">
+                                <input class="search-input" type="text" name="key" placeholder="Enter Name or Library Card's ID">
                                 <button class="search-btn" type="submit">Search</button>
                         </form>
 
