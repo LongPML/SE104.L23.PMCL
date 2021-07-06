@@ -20,7 +20,7 @@ def admin_home(request, *args, **kwargs):
     interested_authors = cursor.execute(f""" select *
                                             from AUTHORS
                                             where AUTHOR_ID in 
-                                            (select top 10 AB.AUTHOR_ID
+                                            (select top 4 AB.AUTHOR_ID
                                             from BORROWCARDS BC right JOIN BOOKS B 
                                             ON BC.BOOK_ID = B.BOOK_ID
                                             left JOIN AUTHORS_BOOKS AB ON B.BOOK_ID = AB.BOOK_ID
@@ -32,7 +32,7 @@ def admin_home(request, *args, **kwargs):
     interested_subjects = cursor.execute(f"""   select *
                                                 from SUBJECTS
                                                 where SUBJECT_ID in 
-                                                (select top 10 SB.SUBJECT_ID
+                                                (select top 4 SB.SUBJECT_ID
                                                 from BORROWCARDS BC right JOIN BOOKS B 
                                                 ON BC.BOOK_ID = B.BOOK_ID
                                                 left JOIN SUBJECTS_BOOKS SB ON B.BOOK_ID = SB.BOOK_ID
@@ -55,7 +55,20 @@ def admin_home(request, *args, **kwargs):
                                     ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
                                     ON BC.LIBCARD_ID = LC.LIBCARD_ID""")
         result = cursor.fetchall()
-        return render(request, "admin-home.html", {'I_Authors':interested_authors,'I_Subjects':interested_subjects,'BookInformation':result})
+    PopularBooks = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, B.PATH, A.NAME AUTHOR
+                                    FROM BOOKS B 
+                                    LEFT JOIN AUTHORS_BOOKS AB 
+                                    ON B.BOOK_ID = AB.BOOK_ID LEFT JOIN AUTHORS A ON AB.AUTHOR_ID = A.AUTHOR_ID
+                                    WHERE B.TITLE IN (
+                                        SELECT TOP 4 BB.TITLE
+                                        FROM BOOKS BB JOIN BORROWCARDS BCC ON BB.BOOK_ID = BCC.BOOK_ID
+                                        WHERE MONTH(BCC.BORROW_DATE) = MONTH(GETDATE()) 
+                                        AND YEAR(BCC.BORROW_DATE) = YEAR(GETDATE())
+                                        GROUP BY BB.TITLE
+                                        ORDER BY COUNT(BB.TITLE) DESC
+                                        )""")
+    PopularBooks = cursor.fetchall()
+    return render(request, "admin-home.html", {'I_Authors':interested_authors,'I_Subjects':interested_subjects,'BookInformation':result,'PopularBooks':PopularBooks})
 
 def BookAdd(request, *args, **kwargs):
     Book = Books()
