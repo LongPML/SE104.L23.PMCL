@@ -24,9 +24,9 @@
             <!-- End: Nav -->
 
             <!-- Begin: Search Book -->
-            <form method="POST" action="SearchBook" class="search-book">
+            <form method="POST" action="/admin-search-book" class="search-book">
                 {% csrf_token %}
-                    <input class="search-text" type="text" name="book" placeholder="Enter Name" onkeyup="this.value = this.value.toUpperCase()">
+                    <input class="search-text" type="text" name="book" placeholder="Enter author, subject name or title">
                     <div class="search_btn_block">
                         <button class="search_btn" type="submit">SEARCH</button>
                     </div>

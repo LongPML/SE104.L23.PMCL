@@ -6,21 +6,41 @@ import datetime
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'
-                      'Server=NHANCSER\ADMIN;' 
-                      # 'Server=ADMIN;'
+                      # 'Server=NHANCSER\ADMIN;' 
+                      'Server=ADMIN;'
                       'Database=QLTV;'
                       'Trusted_Connection=yes;')
 cursor = conn.cursor()
 # Create your views here.
 def home_view(request, *args, **kwargs):
+    NewBooks = cursor.execute(f"""SELECT top 4 B.BOOK_ID, B.TITLE, B.PATH, A.NAME AUTHOR
+                                    FROM BOOKS B 
+                                    LEFT JOIN AUTHORS_BOOKS AB 
+                                    ON B.BOOK_ID = AB.BOOK_ID LEFT JOIN AUTHORS A ON AB.AUTHOR_ID = A.AUTHOR_ID
+                                    ORDER BY B.BOOK_ID DESC""")
+    NewBooks = cursor.fetchall()
 
-    return render(request, "index.html", {})
+    PopularBooks = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, B.PATH, A.NAME AUTHOR
+                                    FROM BOOKS B 
+                                    LEFT JOIN AUTHORS_BOOKS AB 
+                                    ON B.BOOK_ID = AB.BOOK_ID LEFT JOIN AUTHORS A ON AB.AUTHOR_ID = A.AUTHOR_ID
+                                    WHERE B.TITLE IN (
+                                        SELECT TOP 4 BB.TITLE
+                                        FROM BOOKS BB JOIN BORROWCARDS BCC ON BB.BOOK_ID = BCC.BOOK_ID
+                                        WHERE MONTH(BCC.BORROW_DATE) = MONTH(GETDATE())-1 
+                                        AND YEAR(BCC.BORROW_DATE) = YEAR(GETDATE())
+                                        GROUP BY BB.TITLE
+                                        ORDER BY COUNT(BB.TITLE) DESC
+                                        )""")
+    PopularBooks = cursor.fetchall()
+
+    return render(request, "index.html", {'PopularBooks':PopularBooks,'NewBooks':NewBooks})
 
 def admin_home(request, *args, **kwargs):
     interested_authors = cursor.execute(f""" select *
                                             from AUTHORS
                                             where AUTHOR_ID in 
-                                            (select top 10 AB.AUTHOR_ID
+                                            (select top 4 AB.AUTHOR_ID
                                             from BORROWCARDS BC right JOIN BOOKS B 
                                             ON BC.BOOK_ID = B.BOOK_ID
                                             left JOIN AUTHORS_BOOKS AB ON B.BOOK_ID = AB.BOOK_ID
@@ -32,7 +52,7 @@ def admin_home(request, *args, **kwargs):
     interested_subjects = cursor.execute(f"""   select *
                                                 from SUBJECTS
                                                 where SUBJECT_ID in 
-                                                (select top 10 SB.SUBJECT_ID
+                                                (select top 4 SB.SUBJECT_ID
                                                 from BORROWCARDS BC right JOIN BOOKS B 
                                                 ON BC.BOOK_ID = B.BOOK_ID
                                                 left JOIN SUBJECTS_BOOKS SB ON B.BOOK_ID = SB.BOOK_ID
@@ -55,7 +75,26 @@ def admin_home(request, *args, **kwargs):
                                     ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
                                     ON BC.LIBCARD_ID = LC.LIBCARD_ID""")
         result = cursor.fetchall()
-        return render(request, "admin-home.html", {'I_Authors':interested_authors,'I_Subjects':interested_subjects,'BookInformation':result})
+    NewBooks = cursor.execute(f"""SELECT top 4 B.BOOK_ID, B.TITLE, B.PATH, A.NAME AUTHOR
+                                    FROM BOOKS B 
+                                    LEFT JOIN AUTHORS_BOOKS AB 
+                                    ON B.BOOK_ID = AB.BOOK_ID LEFT JOIN AUTHORS A ON AB.AUTHOR_ID = A.AUTHOR_ID
+                                    ORDER BY B.BOOK_ID DESC""")
+    NewBooks = cursor.fetchall()
+
+    PopularBooks = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, B.PATH, A.NAME AUTHOR
+                                    FROM BOOKS B 
+                                    LEFT JOIN AUTHORS_BOOKS AB 
+                                    ON B.BOOK_ID = AB.BOOK_ID LEFT JOIN AUTHORS A ON AB.AUTHOR_ID = A.AUTHOR_ID
+                                    WHERE B.TITLE IN (
+                                        SELECT TOP 4 BB.TITLE
+                                        FROM BOOKS BB JOIN BORROWCARDS BCC ON BB.BOOK_ID = BCC.BOOK_ID
+                                        WHERE MONTH(BCC.BORROW_DATE) = MONTH(GETDATE())-1 
+                                        AND YEAR(BCC.BORROW_DATE) = YEAR(GETDATE())
+                                        GROUP BY BB.TITLE
+                                        ORDER BY COUNT(BB.TITLE) DESC)""")
+    PopularBooks = cursor.fetchall()
+    return render(request, "admin-home.html", {'I_Authors':interested_authors,'I_Subjects':interested_subjects,'BookInformation':result,'PopularBooks':PopularBooks,'NewBooks':NewBooks})
 
 def BookAdd(request, *args, **kwargs):
     Book = Books()
@@ -363,3 +402,37 @@ def ADcollections(request, *args, **kwargs):
                                     ON BC.LIBCARD_ID = LC.LIBCARD_ID""")
         result = cursor.fetchall()
         return render(request, "admin-collections.html", {'BookInformation':result})
+
+def searchBook(request, *args, **kwargs):
+    key = request.POST.get("book")
+    if key is not None:
+        search_result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE, B.PATH
+                                    FROM BOOKS B     
+                                    left JOIN AUTHORS_BOOKS AB
+                                    ON B.BOOK_ID = AB.BOOK_ID left JOIN AUTHORS A
+                                    ON AB.AUTHOR_ID  = A.AUTHOR_ID
+                                    left JOIN SUBJECTS_BOOKS SB
+                                    ON B.BOOK_ID = SB.BOOK_ID left JOIN SUBJECTS S
+                                    ON SB.SUBJECT_ID = S.SUBJECT_ID
+                                    LEFT JOIN BORROWCARDS BC 
+                                    ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
+                                    ON BC.LIBCARD_ID = LC.LIBCARD_ID
+                                    WHERE B.BOOK_ID LIKE '%{key}%' or A.NAME LIKE N'%{key}%' OR S.NAME LIKE N'%{key}%' or B.TITLE LIKE N'%{key}%'""")
+        return render(request, "res_searchbook.html", {'BookDetail':search_result})
+
+def adminSearchBook(request, *args, **kwargs):
+    key = request.POST.get("book")
+    if key is not None:
+        search_result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE, B.PATH
+                                    FROM BOOKS B     
+                                    left JOIN AUTHORS_BOOKS AB
+                                    ON B.BOOK_ID = AB.BOOK_ID left JOIN AUTHORS A
+                                    ON AB.AUTHOR_ID  = A.AUTHOR_ID
+                                    left JOIN SUBJECTS_BOOKS SB
+                                    ON B.BOOK_ID = SB.BOOK_ID left JOIN SUBJECTS S
+                                    ON SB.SUBJECT_ID = S.SUBJECT_ID
+                                    LEFT JOIN BORROWCARDS BC 
+                                    ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
+                                    ON BC.LIBCARD_ID = LC.LIBCARD_ID
+                                    WHERE B.BOOK_ID LIKE '%{key}%' or A.NAME LIKE N'%{key}%' OR S.NAME LIKE N'%{key}%' or B.TITLE LIKE N'%{key}%'""")
+        return render(request, "admin-res_searchbook.html", {'BookDetail':search_result})
