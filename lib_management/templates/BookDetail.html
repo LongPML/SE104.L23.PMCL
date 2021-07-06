@@ -97,7 +97,6 @@
                                 <table class="table table-container">
                                         <thead class="thead-dark">
                                           <tr>
-                                            <th scope="col">#</th>
                                             <th scope="col">Book IDs</th>
                                             <th scope="col">Title</th>
                                             <th scope="col">Author</th>
@@ -108,10 +107,9 @@
                                             <th scope="col">Edit</th>
                                           </tr>
                                         </thead>
-                                        <tbody>                                  
+                                        <tbody>                               
                                         {% for book in BookDetail %}
                                                 <tr>
-                                                        <th scope="row">1</th>
                                                         <td class="text-left">{{book.BOOK_ID}}</td>
                                                         <td class="text-left">{{book.TITLE}}</td>
                                                         <td class="text-left">{{book.AUTHOR}}</td>

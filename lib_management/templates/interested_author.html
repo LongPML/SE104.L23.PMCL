@@ -97,7 +97,6 @@
                                 <table class="table table-container">
                                         <thead class="thead-dark">
                                           <tr>
-                                            <th scope="col">#</th>                                            
                                             <th scope="col">Author</th> <!-- Tên tác giả được mượn nhiều nhất -->
                                             <th scope="col">Number of books</th> <!-- Tổng số cuốn sách ở trong csdl của tác giả đó -->
                                             <th scope="col">Number of borrowing</th> <!-- Số lần mượn theo tác giả đó -->
@@ -106,7 +105,6 @@
                                         <tbody>                                  
                                         {% for item in InterestedAuthor %}
                                                 <tr>
-                                                        <th scope="row">1</th>
                                                         <td class="text-left">{{item.AUTHOR}}</td>
                                                         <td class="text-left">{{item.NumOfBooks}}</td>
                                                         <td class="text-left">{{item.NumOfBorrowing}}</td>

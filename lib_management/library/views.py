@@ -7,8 +7,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.contrib import messages
 conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'
-                      # 'Server=NHANCSER\ADMIN;' 
-                      'Server=ADMIN;'
+                      'Server=NHANCSER\ADMIN;' 
+                    #   'Server=ADMIN;'
                       'Database=QLTV;'
                       'Trusted_Connection=yes;')
 cursor = conn.cursor()
@@ -31,38 +31,12 @@ def home_view(request, *args, **kwargs):
                                         WHERE MONTH(BCC.BORROW_DATE) = MONTH(GETDATE())-1 
                                         AND YEAR(BCC.BORROW_DATE) = YEAR(GETDATE())
                                         GROUP BY BB.TITLE
-                                        ORDER BY COUNT(BB.TITLE) DESC
-                                        )""")
+                                        ORDER BY COUNT(BB.TITLE) DESC)""")
     PopularBooks = cursor.fetchall()
 
     return render(request, "index.html", {'PopularBooks':PopularBooks,'NewBooks':NewBooks})
 
 def admin_home(request, *args, **kwargs):
-    interested_authors = cursor.execute(f""" select *
-                                            from AUTHORS
-                                            where AUTHOR_ID in 
-                                            (select top 4 AB.AUTHOR_ID
-                                            from BORROWCARDS BC right JOIN BOOKS B 
-                                            ON BC.BOOK_ID = B.BOOK_ID
-                                            left JOIN AUTHORS_BOOKS AB ON B.BOOK_ID = AB.BOOK_ID
-                                            WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE()) 
-                                            AND YEAR(BC.BORROW_DATE) = YEAR(GETDATE())
-                                            GROUP BY AB.AUTHOR_ID
-                                            ORDER BY COUNT(AB.AUTHOR_ID) DESC)""")
-    interested_authors = cursor.fetchall()
-    interested_subjects = cursor.execute(f"""   select *
-                                                from SUBJECTS
-                                                where SUBJECT_ID in 
-                                                (select top 4 SB.SUBJECT_ID
-                                                from BORROWCARDS BC right JOIN BOOKS B 
-                                                ON BC.BOOK_ID = B.BOOK_ID
-                                                left JOIN SUBJECTS_BOOKS SB ON B.BOOK_ID = SB.BOOK_ID
-                                                WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE()) 
-                                                AND YEAR(BC.BORROW_DATE) = YEAR(GETDATE())
-                                                GROUP BY SB.SUBJECT_ID
-                                                ORDER BY COUNT(SB.SUBJECT_ID) DESC)""")
-    interested_subjects = cursor.fetchall()
-
     if request.method=="GET":
         result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE, B.PATH
                                     FROM BOOKS B     
@@ -95,7 +69,7 @@ def admin_home(request, *args, **kwargs):
                                         GROUP BY BB.TITLE
                                         ORDER BY COUNT(BB.TITLE) DESC)""")
     PopularBooks = cursor.fetchall()
-    return render(request, "admin-home.html", {'I_Authors':interested_authors,'I_Subjects':interested_subjects,'BookInformation':result,'PopularBooks':PopularBooks,'NewBooks':NewBooks})
+    return render(request, "admin-home.html", {'BookInformation':result,'PopularBooks':PopularBooks,'NewBooks':NewBooks})
 
 def BookAdd(request, *args, **kwargs):
     Book = Books()
@@ -130,9 +104,9 @@ def BookAdd(request, *args, **kwargs):
         cursor.commit()
         cursor.execute(f"insert into SUBJECTS_BOOKS values({last_subject_id},{last_book_id})")
         cursor.commit()
-        return render(request, "BookAdd.html", {})
-    else:
-        return render(request, "BookAdd.html", {})
+        messages.success(request,'Add Book Sucessfully!')
+        return redirect('/book/add')
+    return render(request, "BookAdd.html", {})
 
 
 def BookEdit(request, id_b):
@@ -265,7 +239,7 @@ def MemberDetail(request):
 
 
 def BookDetail(request):
-
+    index = 0
     if request.method=="POST":
         key = request.POST.get("key")
         if key is not None:
@@ -310,16 +284,23 @@ def BookDetail(request):
                                     ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
                                     ON BC.LIBCARD_ID = LC.LIBCARD_ID""")
         result = cursor.fetchall()
-        return render(request, "BookDetail.html", {'BookDetail':result})
+        return render(request, "BookDetail.html", {'BookDetail':result, 'index':index})
 
 
 def Login(request, *args, **kwargs):
     username = request.POST.get("username")
     password = request.POST.get("password")
     if username != None and password != None:
-        match = cursor.execute(f"""select PASSWORD from ACCOUNT WHERE USERNAME = '{username}'""").fetchall()[0][0]
-        if password == match:
-            return redirect('/admin/')
+        try:
+            match = cursor.execute(f"""select PASSWORD from ACCOUNT WHERE USERNAME = '{username}'""").fetchall()[0][0]
+            if password == match:
+                return redirect('/admin')
+            else:
+                messages.error(request,'Username or password is not correct!')
+                return redirect('/login')
+        except:
+                messages.error(request,'Username or password is not correct!')
+                return redirect('/login')
     return render(request, "Login.html", {})
 
 def bookInformation(request, id_b):
@@ -357,49 +338,27 @@ def ADbookInformation(request, id_b):
 
 def collections(request, *args, **kwargs):
     if request.method=="GET":
-        result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE, B.PATH
+        result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT,B.POSITION, B.STATE, B.PATH
                                     FROM BOOKS B     
                                     left JOIN AUTHORS_BOOKS AB
                                     ON B.BOOK_ID = AB.BOOK_ID left JOIN AUTHORS A
                                     ON AB.AUTHOR_ID  = A.AUTHOR_ID
                                     left JOIN SUBJECTS_BOOKS SB
                                     ON B.BOOK_ID = SB.BOOK_ID left JOIN SUBJECTS S
-                                    ON SB.SUBJECT_ID = S.SUBJECT_ID
-                                    LEFT JOIN BORROWCARDS BC 
-                                    ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
-                                    ON BC.LIBCARD_ID = LC.LIBCARD_ID""")
+                                    ON SB.SUBJECT_ID = S.SUBJECT_ID""")
         result = cursor.fetchall()
         return render(request, "collections.html", {'BookInformation':result})
 
-    if request.method=="POST":
-        key = request.POST.get("book")
-        search_result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE, B.PATH
-                                    FROM BOOKS B     
-                                    left JOIN AUTHORS_BOOKS AB
-                                    ON B.BOOK_ID = AB.BOOK_ID left JOIN AUTHORS A
-                                    ON AB.AUTHOR_ID  = A.AUTHOR_ID
-                                    left JOIN SUBJECTS_BOOKS SB
-                                    ON B.BOOK_ID = SB.BOOK_ID left JOIN SUBJECTS S
-                                    ON SB.SUBJECT_ID = S.SUBJECT_ID
-                                    LEFT JOIN BORROWCARDS BC 
-                                    ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
-                                    ON BC.LIBCARD_ID = LC.LIBCARD_ID
-                                    WHERE B.BOOK_ID LIKE '%{key}%' or A.NAME LIKE N'%{key}%' OR S.NAME LIKE N'%{key}%' or B.TITLE LIKE N'%{key}%'""")
-        return render(request, "res_searchbook.html", {'BookDetail':search_result})
-
 def ADcollections(request, *args, **kwargs):
     if request.method=="GET":
-        result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE, B.PATH
+        result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT,B.POSITION, B.STATE, B.PATH
                                     FROM BOOKS B     
                                     left JOIN AUTHORS_BOOKS AB
                                     ON B.BOOK_ID = AB.BOOK_ID left JOIN AUTHORS A
                                     ON AB.AUTHOR_ID  = A.AUTHOR_ID
                                     left JOIN SUBJECTS_BOOKS SB
                                     ON B.BOOK_ID = SB.BOOK_ID left JOIN SUBJECTS S
-                                    ON SB.SUBJECT_ID = S.SUBJECT_ID
-                                    LEFT JOIN BORROWCARDS BC 
-                                    ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
-                                    ON BC.LIBCARD_ID = LC.LIBCARD_ID""")
+                                    ON SB.SUBJECT_ID = S.SUBJECT_ID""")
         result = cursor.fetchall()
         return render(request, "admin-collections.html", {'BookInformation':result})
 

@@ -71,6 +71,15 @@
             {% csrf_token %}
             <input class="username" name="username" type="text" onkeyup="this.vale = this.value.toUpperCase()" placeholder="Username"/>
             <input class="passwork" name="password" type="password" placeholder="Password"/>
+
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} m-2" id="msg" role="alert" style="color: red;">
+              {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+
             <div style="text-align: end">
               <input class="login-btn" type="submit" value="Login" />
             </div>

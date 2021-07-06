@@ -13,7 +13,7 @@
                         .content {
                                 margin-top: 50px;
                                 width: 100%;
-                                height: 791px;
+                                height: 70.6vh;
                                 background-image: url('https://template68194.motopreview.com/mt-demo/68100/68194/mt-content/uploads/2018/07/mt-1519-content-bg-3.jpg');
                                 background-position: center;
                                 background-repeat: no-repeat;
@@ -112,9 +112,19 @@
                                                                 <label class="label_text">Image Source</label>
                                                                 <input class="AddInput" name="path" type="text" placeholder="Path to image"/>
                                                         </div>
+                                                        <div class="flex">
+                                                                <label class="label_text"></label>
+                                                                {% if messages %}
+                                                                {% for message in messages %}
+                                                                <div class="alert alert-danger" role="alert" style="color: red;">
+                                                                  {{ message }}
+                                                                </div>
+                                                                {% endfor %}
+                                                                {% endif %}
+                                                        </div>
                                                         <div>
                                                                 <label class="label_text"></label>
-                                                                <button class="AddButton" type="submit" onclick="return alert('Add Book Successfully!')">ADD</button>
+                                                                <button class="AddButton" type="submit">ADD</button>
                                                         </div>
                                                 </form>
                                         </div>

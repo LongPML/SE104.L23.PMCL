@@ -13,7 +13,7 @@
                         .content {
                                 margin-top: 50px;
                                 width: 100%;
-                                height: 791px;
+                                height: 70.6vh;
                                 background-image: url('https://template68194.motopreview.com/mt-demo/68100/68194/mt-content/uploads/2018/07/mt-1519-content-bg-3.jpg');
                                 background-position: center;
                                 background-repeat: no-repeat;
@@ -39,12 +39,12 @@
                                 padding: 50px 0 0;
                         }
 
-                        form {
+                        .edit-card {
                                 display: flex;
                                 flex-direction: column;
                         }
 
-                        form div {
+                        .edit-card div {
                                 margin-bottom: 20px;
                         }
 
@@ -91,7 +91,7 @@
                                 <div class="update_book"> 
                                         <h2 class="update_title">Borrow Card Information</h2>
                                         <div class="input">
-                                                <form method="POST" action="cardUpdate">
+                                                <form class="edit-card" method="POST" action="cardUpdate">
                                                 {% for card in CardDetail %}
                                                 {% csrf_token %}
                                                 <div>
