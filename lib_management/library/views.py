@@ -363,3 +363,37 @@ def ADcollections(request, *args, **kwargs):
                                     ON BC.LIBCARD_ID = LC.LIBCARD_ID""")
         result = cursor.fetchall()
         return render(request, "admin-collections.html", {'BookInformation':result})
+
+def searchBook(request, *args, **kwargs):
+    key = request.POST.get("book")
+    if key is not None:
+        search_result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE, B.PATH
+                                    FROM BOOKS B     
+                                    left JOIN AUTHORS_BOOKS AB
+                                    ON B.BOOK_ID = AB.BOOK_ID left JOIN AUTHORS A
+                                    ON AB.AUTHOR_ID  = A.AUTHOR_ID
+                                    left JOIN SUBJECTS_BOOKS SB
+                                    ON B.BOOK_ID = SB.BOOK_ID left JOIN SUBJECTS S
+                                    ON SB.SUBJECT_ID = S.SUBJECT_ID
+                                    LEFT JOIN BORROWCARDS BC 
+                                    ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
+                                    ON BC.LIBCARD_ID = LC.LIBCARD_ID
+                                    WHERE B.BOOK_ID LIKE '%{key}%' or A.NAME LIKE N'%{key}%' OR S.NAME LIKE N'%{key}%' or B.TITLE LIKE N'%{key}%'""")
+        return render(request, "res_searchbook.html", {'BookDetail':search_result})
+
+def adminSearchBook(request, *args, **kwargs):
+    key = request.POST.get("book")
+    if key is not None:
+        search_result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE, B.PATH
+                                    FROM BOOKS B     
+                                    left JOIN AUTHORS_BOOKS AB
+                                    ON B.BOOK_ID = AB.BOOK_ID left JOIN AUTHORS A
+                                    ON AB.AUTHOR_ID  = A.AUTHOR_ID
+                                    left JOIN SUBJECTS_BOOKS SB
+                                    ON B.BOOK_ID = SB.BOOK_ID left JOIN SUBJECTS S
+                                    ON SB.SUBJECT_ID = S.SUBJECT_ID
+                                    LEFT JOIN BORROWCARDS BC 
+                                    ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
+                                    ON BC.LIBCARD_ID = LC.LIBCARD_ID
+                                    WHERE B.BOOK_ID LIKE '%{key}%' or A.NAME LIKE N'%{key}%' OR S.NAME LIKE N'%{key}%' or B.TITLE LIKE N'%{key}%'""")
+        return render(request, "admin-res_searchbook.html", {'BookDetail':search_result})

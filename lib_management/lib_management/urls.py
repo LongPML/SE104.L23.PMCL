@@ -21,4 +21,6 @@ urlpatterns = [
     path('ADbookInfo/<int:id_b>',ADbookInformation),
     path('collections',collections),
     path('admin-collections',ADcollections),
+    path('search-book',searchBook),
+    path('admin-search-book',adminSearchBook),
 ]
