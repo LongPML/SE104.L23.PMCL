@@ -84,7 +84,7 @@ html {
     display: none;
     top: 100%;
     left: 0;
-    min-width: 180px;
+    min-width: 200px;
     position: absolute;
     background-color: rgba(0, 0, 0, 0.7);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);

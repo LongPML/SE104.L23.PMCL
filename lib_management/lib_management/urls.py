@@ -23,4 +23,6 @@ urlpatterns = [
     path('admin-collections',ADcollections),
     path('search-book',searchBook),
     path('admin-search-book',adminSearchBook),
+    path('interested_author',interestedAuthor),
+    path('interested_topic',interestedTopic),
 ]

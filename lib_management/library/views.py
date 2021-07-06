@@ -6,8 +6,8 @@ import datetime
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'
-                      # 'Server=NHANCSER\ADMIN;' 
-                      'Server=ADMIN;'
+                      'Server=NHANCSER\ADMIN;' 
+                    #   'Server=ADMIN;'
                       'Database=QLTV;'
                       'Trusted_Connection=yes;')
 cursor = conn.cursor()
@@ -436,3 +436,11 @@ def adminSearchBook(request, *args, **kwargs):
                                     ON BC.LIBCARD_ID = LC.LIBCARD_ID
                                     WHERE B.BOOK_ID LIKE '%{key}%' or A.NAME LIKE N'%{key}%' OR S.NAME LIKE N'%{key}%' or B.TITLE LIKE N'%{key}%'""")
         return render(request, "admin-res_searchbook.html", {'BookDetail':search_result})
+
+def interestedAuthor(request, *args, **kwargs):
+    
+    return render(request, "interested_author.html", {})
+
+def interestedTopic(request, *args, **kwargs):
+    
+    return render(request, "interested_topic.html", {})
