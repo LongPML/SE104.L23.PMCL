@@ -5,9 +5,10 @@ import pyodbc
 import datetime
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
+from django.contrib import messages
 conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'
-                      'Server=NHANCSER\ADMIN;' 
-                    #   'Server=ADMIN;'
+                      # 'Server=NHANCSER\ADMIN;' 
+                      'Server=ADMIN;'
                       'Database=QLTV;'
                       'Trusted_Connection=yes;')
 cursor = conn.cursor()
@@ -318,7 +319,6 @@ def Login(request, *args, **kwargs):
     if username != None and password != None:
         match = cursor.execute(f"""select PASSWORD from ACCOUNT WHERE USERNAME = '{username}'""").fetchall()[0][0]
         if password == match:
-            # return admin_home(request)
             return redirect('/admin/')
     return render(request, "Login.html", {})
 
@@ -438,9 +438,71 @@ def adminSearchBook(request, *args, **kwargs):
         return render(request, "admin-res_searchbook.html", {'BookDetail':search_result})
 
 def interestedAuthor(request, *args, **kwargs):
+    InterestedAuthor = cursor.execute(f"""SELECT T1.*, T2.NumOfBorrowing FROM
+                                        (SELECT A.NAME AUTHOR, COUNT(A.NAME) NumOfBooks
+                                        FROM AUTHORS_BOOKS AB JOIN AUTHORS A ON AB.AUTHOR_ID = A.AUTHOR_ID
+                                        GROUP BY A.NAME) T1
+                                        JOIN
+                                        (SELECT A.NAME,COUNT(A.NAME) AS NumOfBorrowing
+                                        FROM AUTHORS_BOOKS AB JOIN AUTHORS A ON AB.AUTHOR_ID = A.AUTHOR_ID
+                                        JOIN BOOKS B ON B.BOOK_ID = AB.BOOK_ID
+                                        JOIN BORROWCARDS BC ON BC.BOOK_ID = B.BOOK_ID
+                                        WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE())-1
+                                        AND YEAR(BC.BORROW_DATE) = YEAR(GETDATE())
+                                        GROUP BY A.NAME) T2
+                                        ON T1.AUTHOR = T2.NAME
+                                        ORDER BY T2.NumOfBorrowing DESC""")
+    if request.method == "POST":
+        key = request.POST.get("key")
+        InterestedAuthor = cursor.execute(f"""SELECT T1.*, T2.NumOfBorrowing FROM
+                                        (SELECT A.NAME AUTHOR, COUNT(A.NAME) NumOfBooks
+                                        FROM AUTHORS_BOOKS AB JOIN AUTHORS A ON AB.AUTHOR_ID = A.AUTHOR_ID
+                                        GROUP BY A.NAME) T1
+                                        JOIN
+                                        (SELECT A.NAME,COUNT(A.NAME) AS NumOfBorrowing
+                                        FROM AUTHORS_BOOKS AB JOIN AUTHORS A ON AB.AUTHOR_ID = A.AUTHOR_ID
+                                        JOIN BOOKS B ON B.BOOK_ID = AB.BOOK_ID
+                                        JOIN BORROWCARDS BC ON BC.BOOK_ID = B.BOOK_ID
+                                        WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE())-1
+                                        AND YEAR(BC.BORROW_DATE) = YEAR(GETDATE())
+                                        GROUP BY A.NAME) T2
+                                        ON T1.AUTHOR = T2.NAME
+                                        WHERE T1.AUTHOR LIKE N'%{key}%'
+                                        ORDER BY T2.NumOfBorrowing DESC""")
     
-    return render(request, "interested_author.html", {})
+    return render(request, "interested_author.html", {'InterestedAuthor':InterestedAuthor})
 
 def interestedTopic(request, *args, **kwargs):
-    
-    return render(request, "interested_topic.html", {})
+    InterestedTopic = cursor.execute(f"""SELECT T1.*, T2.NumOfBorrowing FROM
+                                        (SELECT S.NAME TOPIC, COUNT(S.NAME) NumOfBooks
+                                        FROM SUBJECTS_BOOKS SB JOIN SUBJECTS S ON SB.SUBJECT_ID = S.SUBJECT_ID
+                                        GROUP BY S.NAME) T1
+                                        JOIN
+                                        (SELECT S.NAME,COUNT(S.NAME) AS NumOfBorrowing
+                                        FROM SUBJECTS_BOOKS SB JOIN SUBJECTS S ON SB.SUBJECT_ID = S.SUBJECT_ID
+                                        JOIN BOOKS B ON B.BOOK_ID = SB.BOOK_ID
+                                        JOIN BORROWCARDS BC ON BC.BOOK_ID = B.BOOK_ID
+                                        WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE())-1 
+                                        AND YEAR(BC.BORROW_DATE) = YEAR(GETDATE())
+                                        GROUP BY S.NAME) T2
+                                        ON T1.TOPIC = T2.NAME
+                                        ORDER BY T2.NumOfBorrowing DESC""")
+    if request.method == "POST":
+        key = request.POST.get("key")
+        InterestedTopic = cursor.execute(f"""SELECT T1.*, T2.NumOfBorrowing FROM
+                                        (SELECT S.NAME TOPIC, COUNT(S.NAME) NumOfBooks
+                                        FROM SUBJECTS_BOOKS SB JOIN SUBJECTS S ON SB.SUBJECT_ID = S.SUBJECT_ID
+                                        GROUP BY S.NAME) T1
+                                        JOIN
+                                        (SELECT S.NAME,COUNT(S.NAME) AS NumOfBorrowing
+                                        FROM SUBJECTS_BOOKS SB JOIN SUBJECTS S ON SB.SUBJECT_ID = S.SUBJECT_ID
+                                        JOIN BOOKS B ON B.BOOK_ID = SB.BOOK_ID
+                                        JOIN BORROWCARDS BC ON BC.BOOK_ID = B.BOOK_ID
+                                        WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE())-1 
+                                        AND YEAR(BC.BORROW_DATE) = YEAR(GETDATE())
+                                        GROUP BY S.NAME) T2
+                                        ON T1.TOPIC = T2.NAME
+                                        WHERE T1.TOPIC LIKE N'%{key}%'
+                                        ORDER BY T2.NumOfBorrowing DESC""")
+
+    return render(request, "interested_topic.html", {'InterestedTopic':InterestedTopic})
