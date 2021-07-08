@@ -129,7 +129,7 @@ def BookEdit(request, id_b):
                                 LEFT JOIN BORROWCARDS BC 
                                 ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
                                 ON BC.LIBCARD_ID = LC.LIBCARD_ID
-                                WHERE B.BOOK_ID = {id_b}""")
+                                WHERE B.BOOK_ID = {id_b} AND BC.RETURN_DATE IS NULL""")
     result = cursor.fetchall()
     return render(request, "BookEdit.html", {'BookDetail':result})
 
@@ -147,7 +147,7 @@ def BookUpdate(request):
             cursor.execute(f"""UPDATE BOOKS SET STATE = {state}, POSITION = '{position}', PATH = '{path}' WHERE BOOK_ID = {bookid}""")
             cursor.commit()
             messages.success(request,'Update Book Sucessfully!')
-            return redirect('/bookDetail/')
+            return redirect(f'/bookEdit/{bookid}')
     except:
         messages.error(request,'Update Book Unsucessfully! Please make sure that all information entered is correct!')
         return redirect(f'/bookEdit/{bookid}')
@@ -159,6 +159,18 @@ def CardAdd(request, *args, **kwargs):
     card.borrow_date = request.POST.get('borrow_date')
     card.due_date = request.POST.get('due_date')
     if request.method=="POST":
+        state = None
+        try:
+            state = cursor.execute(f"""SELECT STATE FROM BOOKS WHERE BOOK_ID = {card.bookid}""").fetchall()[0][0]
+        except:
+            messages.error(request,'Wrong Book ID')
+            return redirect('/card/add')
+
+        if state != 1:
+            messages.error(request,'This Book Is Not Available')
+            return redirect('/card/add')
+
+    
         # card.borrow_date = datetime.datetime.strptime(request.POST.get('date'),"%Y-%m-%d").date()
         if card.bookid != None and card.libcardid != None and card.borrow_date != "" and card.due_date != "" and card.bookid != "" and card.libcardid != "":
             try:
@@ -275,7 +287,7 @@ def BookDetail(request):
     if request.method=="POST":
         key = request.POST.get("key")
         if key is not None:
-            search_result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE, B.PATH
+            search_result = cursor.execute(f"""SELECT DISTINCT(B.BOOK_ID), B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE, B.PATH
                                         FROM BOOKS B     
                                         left JOIN AUTHORS_BOOKS AB
                                         ON B.BOOK_ID = AB.BOOK_ID left JOIN AUTHORS A
@@ -286,7 +298,9 @@ def BookDetail(request):
                                         LEFT JOIN BORROWCARDS BC 
                                         ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
                                         ON BC.LIBCARD_ID = LC.LIBCARD_ID
-                                        WHERE B.BOOK_ID LIKE '%{key}%' or A.NAME LIKE N'%{key}%' OR S.NAME LIKE N'%{key}%' or B.TITLE LIKE N'%{key}%'""")
+                                        WHERE (B.BOOK_ID LIKE '%{key}%' or A.NAME LIKE N'%{key}%' 
+                                        OR S.NAME LIKE N'%{key}%' or B.TITLE LIKE N'%{key}%')
+                                        AND BC.RETURN_DATE is NULL""")
             search_result = search_result.fetchall()
             for i in range(len(search_result)):
                    if search_result[i][6] != 0:
@@ -305,7 +319,11 @@ def BookDetail(request):
                                         LEFT JOIN BORROWCARDS BC 
                                         ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
                                         ON BC.LIBCARD_ID = LC.LIBCARD_ID
-                                        WHERE B.BOOK_ID LIKE '%{key}%' or A.NAME LIKE N'%{key}%' OR S.NAME LIKE N'%{key}%' or B.TITLE LIKE N'%{key}%'""")
+                                        WHERE (B.BOOK_ID LIKE '%{key}%' 
+                                        or A.NAME LIKE N'%{key}%' 
+                                        OR S.NAME LIKE N'%{key}%' 
+                                        or B.TITLE LIKE N'%{key}%')
+                                        AND BC.RETURN_DATE is NULL""")
             return render(request, "res_searchbook.html", {'BookDetail':search_result})
     if request.method=="GET":
         result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE
@@ -318,7 +336,8 @@ def BookDetail(request):
                                     ON SB.SUBJECT_ID = S.SUBJECT_ID
                                     LEFT JOIN BORROWCARDS BC 
                                     ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
-                                    ON BC.LIBCARD_ID = LC.LIBCARD_ID""")
+                                    ON BC.LIBCARD_ID = LC.LIBCARD_ID
+                                    WHERE BC.RETURN_DATE is NULL""")
         result = cursor.fetchall()
         for i in range(len(result)):
                if result[i][6] != 0:
@@ -359,7 +378,7 @@ def bookInformation(request, id_b):
     return render(request, "book_info.html", {'BookInfor':result})
 
 def ADbookInformation(request, id_b):
-    result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE, B.PATH
+    result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, B.POSITION, B.STATE, B.PATH
                                 FROM BOOKS B     
                                 JOIN AUTHORS_BOOKS AB
                                 ON B.BOOK_ID = AB.BOOK_ID JOIN AUTHORS A
@@ -367,9 +386,9 @@ def ADbookInformation(request, id_b):
                                 JOIN SUBJECTS_BOOKS SB
                                 ON B.BOOK_ID = SB.BOOK_ID JOIN SUBJECTS S
                                 ON SB.SUBJECT_ID = S.SUBJECT_ID
-                                LEFT JOIN BORROWCARDS BC 
-                                ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
-                                ON BC.LIBCARD_ID = LC.LIBCARD_ID
+                                --LEFT JOIN BORROWCARDS BC 
+                                --ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
+                                --ON BC.LIBCARD_ID = LC.LIBCARD_ID
                                 WHERE B.BOOK_ID = {id_b}""")
     result = cursor.fetchall()
     return render(request, "admin-book_info.html", {'BookInfor':result})
