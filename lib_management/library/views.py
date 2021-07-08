@@ -28,8 +28,8 @@ def home_view(request, *args, **kwargs):
                                     WHERE B.TITLE IN (
                                         SELECT TOP 4 BB.TITLE
                                         FROM BOOKS BB JOIN BORROWCARDS BCC ON BB.BOOK_ID = BCC.BOOK_ID
-                                        WHERE MONTH(BCC.BORROW_DATE) = MONTH(GETDATE())-1 
-                                        AND YEAR(BCC.BORROW_DATE) = YEAR(GETDATE())
+                                        --WHERE MONTH(BCC.BORROW_DATE) = MONTH(GETDATE())-1 
+                                        --AND YEAR(BCC.BORROW_DATE) = YEAR(GETDATE())
                                         GROUP BY BB.TITLE
                                         ORDER BY COUNT(BB.TITLE) DESC)""")
     PopularBooks = cursor.fetchall()
@@ -64,8 +64,8 @@ def admin_home(request, *args, **kwargs):
                                     WHERE B.TITLE IN (
                                         SELECT TOP 4 BB.TITLE
                                         FROM BOOKS BB JOIN BORROWCARDS BCC ON BB.BOOK_ID = BCC.BOOK_ID
-                                        WHERE MONTH(BCC.BORROW_DATE) = MONTH(GETDATE())-1 
-                                        AND YEAR(BCC.BORROW_DATE) = YEAR(GETDATE())
+                                        --WHERE MONTH(BCC.BORROW_DATE) = MONTH(GETDATE())-1 
+                                        --AND YEAR(BCC.BORROW_DATE) = YEAR(GETDATE())
                                         GROUP BY BB.TITLE
                                         ORDER BY COUNT(BB.TITLE) DESC)""")
     PopularBooks = cursor.fetchall()
@@ -138,14 +138,19 @@ def BookUpdate(request):
     position = request.POST.get("position")
     state = request.POST.get("state")
     path = request.POST.get("path")
+    
     try:
-        cursor.execute(f"""UPDATE BOOKS SET STATE = {state}, POSITION = '{position}', PATH = '{path}' WHERE BOOK_ID = {bookid}""")
-        cursor.commit()
-        messages.success(request,'Update Book Sucessfully!')
-        return redirect('/bookDetail/')
+        if request.method == "POST":
+            if int(state) not in [0,1,2]:
+                messages.error(request,'Update Book Unsucessfully! Please make sure that all information entered is correct!')
+                return redirect(f'/bookEdit/{bookid}')
+            cursor.execute(f"""UPDATE BOOKS SET STATE = {state}, POSITION = '{position}', PATH = '{path}' WHERE BOOK_ID = {bookid}""")
+            cursor.commit()
+            messages.success(request,'Update Book Sucessfully!')
+            return redirect('/bookDetail/')
     except:
         messages.error(request,'Update Book Unsucessfully! Please make sure that all information entered is correct!')
-        return redirect(f'/BookEdit/{bookid}')
+        return redirect(f'/bookEdit/{bookid}')
 
 def CardAdd(request, *args, **kwargs):
     card = Borrowcards()
@@ -282,6 +287,10 @@ def BookDetail(request):
                                         ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
                                         ON BC.LIBCARD_ID = LC.LIBCARD_ID
                                         WHERE B.BOOK_ID LIKE '%{key}%' or A.NAME LIKE N'%{key}%' OR S.NAME LIKE N'%{key}%' or B.TITLE LIKE N'%{key}%'""")
+            search_result = search_result.fetchall()
+            for i in range(len(search_result)):
+                   if search_result[i][6] != 0:
+                          search_result[i][4] = None
             return render(request, "BookDetail.html", {'BookDetail':search_result})
         else:
             key = request.POST.get("book")
@@ -311,6 +320,9 @@ def BookDetail(request):
                                     ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
                                     ON BC.LIBCARD_ID = LC.LIBCARD_ID""")
         result = cursor.fetchall()
+        for i in range(len(result)):
+               if result[i][6] != 0:
+                      result[i][4] = None
         return render(request, "BookDetail.html", {'BookDetail':result, 'index':index})
 
 
