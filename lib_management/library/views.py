@@ -380,6 +380,11 @@ def bookInformation(request, id_b):
                                 --ON BC.LIBCARD_ID = LC.LIBCARD_ID
                                 WHERE B.BOOK_ID = {id_b}""")
     result = cursor.fetchall()
+    for i in range(len(result)):
+        if result[i][5] == 0 or result[i][5] == 2:
+            result[i][5] = 'Unavailable'
+        else:
+            result[i][5] = 'Available'
     return render(request, "book_info.html", {'BookInfor':result})
 
 def ADbookInformation(request, id_b):
@@ -396,6 +401,11 @@ def ADbookInformation(request, id_b):
                                 --ON BC.LIBCARD_ID = LC.LIBCARD_ID
                                 WHERE B.BOOK_ID = {id_b}""")
     result = cursor.fetchall()
+    for i in range(len(result)):
+        if result[i][5] == 0 or result[i][5] == 2:
+            result[i][5] = 'Unavailable'
+        else:
+            result[i][5] = 'Available'
     return render(request, "admin-book_info.html", {'BookInfor':result})
 
 
