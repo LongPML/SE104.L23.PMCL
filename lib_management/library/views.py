@@ -147,7 +147,7 @@ def BookUpdate(request):
             cursor.execute(f"""UPDATE BOOKS SET STATE = {state}, POSITION = '{position}', PATH = '{path}' WHERE BOOK_ID = {bookid}""")
             cursor.commit()
             messages.success(request,'Update Book Sucessfully!')
-            return redirect(f'/bookEdit/{bookid}')
+            return redirect(f'/bookDetail')
     except:
         messages.error(request,'Update Book Unsucessfully! Please make sure that all information entered is correct!')
         return redirect(f'/bookEdit/{bookid}')
@@ -247,7 +247,7 @@ def CardUpdate(request):
         cursor.commit()
         messages.success(request,'Update Borrow Card Sucessfully!')
         # return CardEdit(request,card.BORROWCARD_ID)
-        return redirect(f'/cardEdit/{card.BORROWCARD_ID}')
+        return redirect(f'/cardDetail')
     except:
         messages.error(request,'Update Borrow Card Unsucessfully! Please make sure that all information entered is correct!')
         return redirect(f'/cardEdit/{card.BORROWCARD_ID}')
