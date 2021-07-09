@@ -10,7 +10,7 @@ import platform
 import socket
 import os
 server = platform.node()
-server = 'NHANCSER\ADMIN'
+# server = 'NHANCSER\ADMIN'
 drivers = pyodbc.drivers()
 for i in reversed(drivers):
        conencted = None
@@ -24,7 +24,7 @@ for i in reversed(drivers):
 cursor = conn.cursor()
 # Create your views here.
 def home_view(request, *args, **kwargs):
-    NewBooks = cursor.execute(f"""SELECT top 4 B.BOOK_ID, B.TITLE, B.PATH, A.NAME AUTHOR
+    NewBooks = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, B.PATH, A.NAME AUTHOR
                                     FROM BOOKS B 
                                     LEFT JOIN AUTHORS_BOOKS AB 
                                     ON B.BOOK_ID = AB.BOOK_ID LEFT JOIN AUTHORS A ON AB.AUTHOR_ID = A.AUTHOR_ID
@@ -36,7 +36,7 @@ def home_view(request, *args, **kwargs):
                                     LEFT JOIN AUTHORS_BOOKS AB 
                                     ON B.BOOK_ID = AB.BOOK_ID LEFT JOIN AUTHORS A ON AB.AUTHOR_ID = A.AUTHOR_ID
                                     WHERE B.TITLE IN (
-                                        SELECT TOP 4 BB.TITLE
+                                        SELECT TOP 100 BB.TITLE
                                         FROM BOOKS BB JOIN BORROWCARDS BCC ON BB.BOOK_ID = BCC.BOOK_ID
                                         --WHERE MONTH(BCC.BORROW_DATE) = MONTH(GETDATE())-1 
                                         --AND YEAR(BCC.BORROW_DATE) = YEAR(GETDATE())
@@ -58,9 +58,10 @@ def admin_home(request, *args, **kwargs):
                                     ON SB.SUBJECT_ID = S.SUBJECT_ID
                                     LEFT JOIN BORROWCARDS BC 
                                     ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
-                                    ON BC.LIBCARD_ID = LC.LIBCARD_ID""")
+                                    ON BC.LIBCARD_ID = LC.LIBCARD_ID
+                                    ORDER BY B.BOOK_ID DESC""")
         result = cursor.fetchall()
-    NewBooks = cursor.execute(f"""SELECT top 4 B.BOOK_ID, B.TITLE, B.PATH, A.NAME AUTHOR
+    NewBooks = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, B.PATH, A.NAME AUTHOR
                                     FROM BOOKS B 
                                     LEFT JOIN AUTHORS_BOOKS AB 
                                     ON B.BOOK_ID = AB.BOOK_ID LEFT JOIN AUTHORS A ON AB.AUTHOR_ID = A.AUTHOR_ID
@@ -72,9 +73,9 @@ def admin_home(request, *args, **kwargs):
                                     LEFT JOIN AUTHORS_BOOKS AB 
                                     ON B.BOOK_ID = AB.BOOK_ID LEFT JOIN AUTHORS A ON AB.AUTHOR_ID = A.AUTHOR_ID
                                     WHERE B.TITLE IN (
-                                        SELECT TOP 4 BB.TITLE
+                                        SELECT TOP 100 BB.TITLE
                                         FROM BOOKS BB JOIN BORROWCARDS BCC ON BB.BOOK_ID = BCC.BOOK_ID
-                                        --WHERE MONTH(BCC.BORROW_DATE) = MONTH(GETDATE())-1 
+                                        --WHERE MONTH(BCC.BORROW_DATE) = MONTH(GETDATE()) 
                                         --AND YEAR(BCC.BORROW_DATE) = YEAR(GETDATE())
                                         GROUP BY BB.TITLE
                                         ORDER BY COUNT(BB.TITLE) DESC)""")
@@ -206,7 +207,8 @@ def CardDetail(request, *args, **kwargs):
                                            on BC.LIBCARD_ID = LC.LIBCARD_ID 
                                            join BOOKS B
                                            on BC.BOOK_ID = B.BOOK_ID
-                                           where LC.NAME like N'%{key}%' or BC.BORROWCARD_ID like '%{key}%' or LC.LIBCARD_ID like '%{key}%'""")
+                                           where LC.NAME like N'%{key}%' or BC.BORROWCARD_ID like '%{key}%' or LC.LIBCARD_ID like '%{key}%'
+                                           ORDER BY BC.BORROWCARD_ID DESC""")
         return render(request, 'CardDetail.html', {'CardDetail':search_result})
 
     if request.method=="GET":
@@ -214,7 +216,8 @@ def CardDetail(request, *args, **kwargs):
                                    from BORROWCARDS BC join LIBCARDS LC 
                                    on BC.LIBCARD_ID = LC.LIBCARD_ID 
                                    join BOOKS B
-                                   on BC.BOOK_ID = B.BOOK_ID""")
+                                   on BC.BOOK_ID = B.BOOK_ID
+                                   ORDER BY BC.BORROWCARD_ID DESC""")
         result = cursor.fetchall()
         return render(request, 'CardDetail.html', {'CardDetail':result})
 
@@ -287,11 +290,12 @@ def MemberDetail(request):
     if request.method=="POST":
         key = request.POST.get("key")
         search_result = cursor.execute(f"""select * from LIBCARDS
-                                           where NAME like '%{key}%' or LIBCARD_ID like '%{key}%'""")
+                                           where NAME like '%{key}%' or LIBCARD_ID like '%{key}%'
+                                           ORDER BY LIBCARDS.LIBCARD_ID DESC""")
         return render(request, 'MemberDetail.html', {'Libcards':search_result})
 
     if request.method=="GET":
-        result = cursor.execute(f"""select * from LIBCARDS""")
+        result = cursor.execute(f"""select * from LIBCARDS ORDER BY LIBCARDS.LIBCARD_ID DESC""")
         result = cursor.fetchall()
         return render(request, 'memberDetail.html', {'Libcards':result})
 
@@ -314,7 +318,8 @@ def BookDetail(request):
                                         ON BC.LIBCARD_ID = LC.LIBCARD_ID
                                         WHERE (B.BOOK_ID LIKE '%{key}%' or A.NAME LIKE N'%{key}%' 
                                         OR S.NAME LIKE N'%{key}%' or B.TITLE LIKE N'%{key}%')
-                                        AND BC.RETURN_DATE is NULL OR (BC.RETURN_DATE IS NOT NULL AND B.STATE = 1)""")
+                                        AND BC.RETURN_DATE is NULL OR (BC.RETURN_DATE IS NOT NULL AND B.STATE = 1)
+                                        ORDER BY B.BOOK_ID DESC""")
             search_result = search_result.fetchall()
             for i in range(len(search_result)):
                    if search_result[i][6] != 0:
@@ -337,7 +342,8 @@ def BookDetail(request):
                                         or A.NAME LIKE N'%{key}%' 
                                         OR S.NAME LIKE N'%{key}%' 
                                         or B.TITLE LIKE N'%{key}%')
-                                        AND BC.RETURN_DATE is NULL OR (BC.RETURN_DATE IS NOT NULL AND B.STATE = 1)""")
+                                        AND BC.RETURN_DATE is NULL OR (BC.RETURN_DATE IS NOT NULL AND B.STATE = 1)
+                                        ORDER BY B.BOOK_ID DESC""")
             return render(request, "res_searchbook.html", {'BookDetail':search_result})
     if request.method=="GET":
         result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE
@@ -351,7 +357,8 @@ def BookDetail(request):
                                     LEFT JOIN BORROWCARDS BC 
                                     ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
                                     ON BC.LIBCARD_ID = LC.LIBCARD_ID
-                                    WHERE BC.RETURN_DATE is NULL OR (BC.RETURN_DATE IS NOT NULL AND B.STATE = 1)""")
+                                    WHERE BC.RETURN_DATE is NULL OR (BC.RETURN_DATE IS NOT NULL AND B.STATE = 1)
+                                    ORDER BY B.BOOK_ID DESC""")
         result = cursor.fetchall()
         for i in range(len(result)):
                if result[i][6] != 0:
@@ -384,7 +391,8 @@ def bookInformation(request, id_b):
                                 JOIN SUBJECTS_BOOKS SB
                                 ON B.BOOK_ID = SB.BOOK_ID JOIN SUBJECTS S
                                 ON SB.SUBJECT_ID = S.SUBJECT_ID
-                                WHERE B.BOOK_ID = {id_b}""")
+                                WHERE B.BOOK_ID = {id_b}
+                                ORDER BY B.BOOK_ID DESC""")
     result = cursor.fetchall()
     for i in range(len(result)):
         if result[i][5] == 0 or result[i][5] == 2:
@@ -402,7 +410,8 @@ def ADbookInformation(request, id_b):
                                 JOIN SUBJECTS_BOOKS SB
                                 ON B.BOOK_ID = SB.BOOK_ID JOIN SUBJECTS S
                                 ON SB.SUBJECT_ID = S.SUBJECT_ID
-                                WHERE B.BOOK_ID = {id_b}""")
+                                WHERE B.BOOK_ID = {id_b}
+                                ORDER BY B.BOOK_ID DESC""")
     result = cursor.fetchall()
     for i in range(len(result)):
         if result[i][5] == 0 or result[i][5] == 2:
@@ -421,7 +430,8 @@ def collections(request, *args, **kwargs):
                                     ON AB.AUTHOR_ID  = A.AUTHOR_ID
                                     left JOIN SUBJECTS_BOOKS SB
                                     ON B.BOOK_ID = SB.BOOK_ID left JOIN SUBJECTS S
-                                    ON SB.SUBJECT_ID = S.SUBJECT_ID""")
+                                    ON SB.SUBJECT_ID = S.SUBJECT_ID
+                                    ORDER BY B.BOOK_ID DESC""")
         result = cursor.fetchall()
         return render(request, "collections.html", {'BookInformation':result})
 
@@ -434,7 +444,8 @@ def ADcollections(request, *args, **kwargs):
                                     ON AB.AUTHOR_ID  = A.AUTHOR_ID
                                     left JOIN SUBJECTS_BOOKS SB
                                     ON B.BOOK_ID = SB.BOOK_ID left JOIN SUBJECTS S
-                                    ON SB.SUBJECT_ID = S.SUBJECT_ID""")
+                                    ON SB.SUBJECT_ID = S.SUBJECT_ID
+                                    ORDER BY B.BOOK_ID DESC""")
         result = cursor.fetchall()
         return render(request, "admin-collections.html", {'BookInformation':result})
 
@@ -476,8 +487,8 @@ def interestedAuthor(request, *args, **kwargs):
                                         FROM AUTHORS_BOOKS AB JOIN AUTHORS A ON AB.AUTHOR_ID = A.AUTHOR_ID
                                         JOIN BOOKS B ON B.BOOK_ID = AB.BOOK_ID
                                         JOIN BORROWCARDS BC ON BC.BOOK_ID = B.BOOK_ID
-                                        WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE())-1
-                                        AND YEAR(BC.BORROW_DATE) = YEAR(GETDATE())
+                                        --WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE())
+                                        --AND YEAR(BC.BORROW_DATE) = YEAR(GETDATE())
                                         GROUP BY A.NAME) T2
                                         ON T1.AUTHOR = T2.NAME
                                         ORDER BY T2.NumOfBorrowing DESC""")
@@ -492,7 +503,7 @@ def interestedAuthor(request, *args, **kwargs):
                                         FROM AUTHORS_BOOKS AB JOIN AUTHORS A ON AB.AUTHOR_ID = A.AUTHOR_ID
                                         JOIN BOOKS B ON B.BOOK_ID = AB.BOOK_ID
                                         JOIN BORROWCARDS BC ON BC.BOOK_ID = B.BOOK_ID
-                                        WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE())-1
+                                        WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE())
                                         AND YEAR(BC.BORROW_DATE) = YEAR(GETDATE())
                                         GROUP BY A.NAME) T2
                                         ON T1.AUTHOR = T2.NAME
@@ -511,7 +522,7 @@ def interestedTopic(request, *args, **kwargs):
                                         FROM SUBJECTS_BOOKS SB JOIN SUBJECTS S ON SB.SUBJECT_ID = S.SUBJECT_ID
                                         JOIN BOOKS B ON B.BOOK_ID = SB.BOOK_ID
                                         JOIN BORROWCARDS BC ON BC.BOOK_ID = B.BOOK_ID
-                                        WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE())-1 
+                                        WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE())
                                         AND YEAR(BC.BORROW_DATE) = YEAR(GETDATE())
                                         GROUP BY S.NAME) T2
                                         ON T1.TOPIC = T2.NAME
@@ -527,7 +538,7 @@ def interestedTopic(request, *args, **kwargs):
                                         FROM SUBJECTS_BOOKS SB JOIN SUBJECTS S ON SB.SUBJECT_ID = S.SUBJECT_ID
                                         JOIN BOOKS B ON B.BOOK_ID = SB.BOOK_ID
                                         JOIN BORROWCARDS BC ON BC.BOOK_ID = B.BOOK_ID
-                                        WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE())-1 
+                                        WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE())
                                         AND YEAR(BC.BORROW_DATE) = YEAR(GETDATE())
                                         GROUP BY S.NAME) T2
                                         ON T1.TOPIC = T2.NAME
