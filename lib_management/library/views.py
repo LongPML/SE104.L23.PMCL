@@ -148,7 +148,7 @@ def BookUpdate(request):
             cursor.execute(f"""UPDATE BOOKS SET STATE = {state}, POSITION = '{position}', PATH = '{path}' WHERE BOOK_ID = {bookid}""")
             cursor.commit()
             messages.success(request,'Update Book Sucessfully!')
-            return redirect(f'/bookEdit/{bookid}')
+            return redirect(f'/bookDetail')
     except:
         messages.error(request,'Update Book Unsucessfully! Please make sure that all information entered is correct!')
         return redirect(f'/bookEdit/{bookid}')
@@ -235,18 +235,23 @@ def CardUpdate(request):
     card.TITLE = request.POST.get('title')
     card.DUE_DATE = request.POST.get('due_date')
     card.RETURN_DATE = request.POST.get('return_date')
-    if card.RETURN_DATE=="1900-01-01":
-        cursor.execute(f"""UPDATE BORROWCARDS SET RETURN_DATE = NULL WHERE BORROWCARD_ID = {card.BORROWCARD_ID}""")
-    else:
-        cursor.execute(f"""UPDATE BORROWCARDS SET RETURN_DATE = '{card.RETURN_DATE}' WHERE BORROWCARD_ID = {card.BORROWCARD_ID}""")
+
+    try:
+        if card.RETURN_DATE=="1900-01-01":
+            cursor.execute(f"""UPDATE BORROWCARDS SET RETURN_DATE = NULL WHERE BORROWCARD_ID = {card.BORROWCARD_ID}""")
+        else:
+            cursor.execute(f"""UPDATE BORROWCARDS SET RETURN_DATE = '{card.RETURN_DATE}' WHERE BORROWCARD_ID = {card.BORROWCARD_ID}""")
+            cursor.commit()
+            # BOOK_ID = [i for i in cursor.execute(f"""SELECT BOOK_ID FROM BORROWCARDS WHERE BORROWCARD_ID = {card.BORROWCARD_ID}""")][0][0]
+            BOOK_ID = cursor.execute(f"""SELECT BOOK_ID FROM BORROWCARDS WHERE BORROWCARD_ID = {card.BORROWCARD_ID}""").fetchall()[0][0]
+            cursor.execute(f"""UPDATE BOOKS SET STATE = 1 WHERE BOOK_ID = {BOOK_ID}""")
         cursor.commit()
-        # BOOK_ID = [i for i in cursor.execute(f"""SELECT BOOK_ID FROM BORROWCARDS WHERE BORROWCARD_ID = {card.BORROWCARD_ID}""")][0][0]
-        BOOK_ID = cursor.execute(f"""SELECT BOOK_ID FROM BORROWCARDS WHERE BORROWCARD_ID = {card.BORROWCARD_ID}""").fetchall()[0][0]
-        cursor.execute(f"""UPDATE BOOKS SET STATE = 1 WHERE BOOK_ID = {BOOK_ID}""")
-    cursor.commit()
-    messages.success(request,'Update Borrow Card Sucessfully!')
-    # return CardEdit(request,card.BORROWCARD_ID)
-    return redirect('/cardDetail/')
+        messages.success(request,'Update Borrow Card Sucessfully!')
+        # return CardEdit(request,card.BORROWCARD_ID)
+        return redirect(f'/cardDetail')
+    except:
+        messages.error(request,'Update Borrow Card Unsucessfully! Please make sure that all information entered is correct!')
+        return redirect(f'/cardEdit/{card.BORROWCARD_ID}')
 
 def MemberAdd(request, *args, **kwargs):
     member = Libcards()
@@ -363,7 +368,7 @@ def Login(request, *args, **kwargs):
     return render(request, "Login.html", {})
 
 def bookInformation(request, id_b):
-    result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE, B.PATH
+    result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT,B.POSITION, B.STATE, B.PATH
                                 FROM BOOKS B     
                                 JOIN AUTHORS_BOOKS AB
                                 ON B.BOOK_ID = AB.BOOK_ID JOIN AUTHORS A
@@ -371,11 +376,16 @@ def bookInformation(request, id_b):
                                 JOIN SUBJECTS_BOOKS SB
                                 ON B.BOOK_ID = SB.BOOK_ID JOIN SUBJECTS S
                                 ON SB.SUBJECT_ID = S.SUBJECT_ID
-                                LEFT JOIN BORROWCARDS BC 
-                                ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
-                                ON BC.LIBCARD_ID = LC.LIBCARD_ID
+                                --LEFT JOIN BORROWCARDS BC 
+                                --ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
+                                --ON BC.LIBCARD_ID = LC.LIBCARD_ID
                                 WHERE B.BOOK_ID = {id_b}""")
     result = cursor.fetchall()
+    for i in range(len(result)):
+        if result[i][5] == 0 or result[i][5] == 2:
+            result[i][5] = 'Unavailable'
+        else:
+            result[i][5] = 'Available'
     return render(request, "book_info.html", {'BookInfor':result})
 
 def ADbookInformation(request, id_b):
@@ -392,6 +402,11 @@ def ADbookInformation(request, id_b):
                                 --ON BC.LIBCARD_ID = LC.LIBCARD_ID
                                 WHERE B.BOOK_ID = {id_b}""")
     result = cursor.fetchall()
+    for i in range(len(result)):
+        if result[i][5] == 0 or result[i][5] == 2:
+            result[i][5] = 'Unavailable'
+        else:
+            result[i][5] = 'Available'
     return render(request, "admin-book_info.html", {'BookInfor':result})
 
 

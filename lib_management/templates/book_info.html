@@ -52,7 +52,7 @@
                         padding: 10px;
                     }
 
-                    .book-name h1{
+                    .book-name{
                         height: 200px;
                         padding-bottom: 50px;
                         font-weight: 400;
@@ -121,6 +121,11 @@
                                     <p class="label">Book IDs</p>
                                     <p class="short-desc">{{book.BOOK_ID}}</p>
                                 </div>
+                                <div class="book-desc flex">
+                                    <p class="label">Book State</p>
+                                    <p class="short-desc">{{book.STATE}}</p>
+                                </div>
+                                {% endfor %}
                                 {% endfor %}
                             </div>
                         </div>
