@@ -10,7 +10,7 @@ import platform
 import socket
 import os
 server = platform.node()
-# server = 'NHANCSER\ADMIN'
+server = 'NHANCSER\ADMIN'
 drivers = pyodbc.drivers()
 for i in reversed(drivers):
        conencted = None
@@ -24,7 +24,7 @@ for i in reversed(drivers):
 cursor = conn.cursor()
 # Create your views here.
 def home_view(request, *args, **kwargs):
-    NewBooks = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, B.PATH, A.NAME AUTHOR
+    NewBooks = cursor.execute(f"""SELECT TOP 4 B.BOOK_ID, B.TITLE, B.PATH, A.NAME AUTHOR
                                     FROM BOOKS B 
                                     LEFT JOIN AUTHORS_BOOKS AB 
                                     ON B.BOOK_ID = AB.BOOK_ID LEFT JOIN AUTHORS A ON AB.AUTHOR_ID = A.AUTHOR_ID
@@ -36,7 +36,7 @@ def home_view(request, *args, **kwargs):
                                     LEFT JOIN AUTHORS_BOOKS AB 
                                     ON B.BOOK_ID = AB.BOOK_ID LEFT JOIN AUTHORS A ON AB.AUTHOR_ID = A.AUTHOR_ID
                                     WHERE B.TITLE IN (
-                                        SELECT TOP 100 BB.TITLE
+                                        SELECT TOP 4 BB.TITLE
                                         FROM BOOKS BB JOIN BORROWCARDS BCC ON BB.BOOK_ID = BCC.BOOK_ID
                                         --WHERE MONTH(BCC.BORROW_DATE) = MONTH(GETDATE())-1 
                                         --AND YEAR(BCC.BORROW_DATE) = YEAR(GETDATE())
@@ -61,7 +61,7 @@ def admin_home(request, *args, **kwargs):
                                     ON BC.LIBCARD_ID = LC.LIBCARD_ID
                                     ORDER BY B.BOOK_ID DESC""")
         result = cursor.fetchall()
-    NewBooks = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, B.PATH, A.NAME AUTHOR
+    NewBooks = cursor.execute(f"""SELECT TOP 4 B.BOOK_ID, B.TITLE, B.PATH, A.NAME AUTHOR
                                     FROM BOOKS B 
                                     LEFT JOIN AUTHORS_BOOKS AB 
                                     ON B.BOOK_ID = AB.BOOK_ID LEFT JOIN AUTHORS A ON AB.AUTHOR_ID = A.AUTHOR_ID
@@ -73,7 +73,7 @@ def admin_home(request, *args, **kwargs):
                                     LEFT JOIN AUTHORS_BOOKS AB 
                                     ON B.BOOK_ID = AB.BOOK_ID LEFT JOIN AUTHORS A ON AB.AUTHOR_ID = A.AUTHOR_ID
                                     WHERE B.TITLE IN (
-                                        SELECT TOP 100 BB.TITLE
+                                        SELECT TOP 4 BB.TITLE
                                         FROM BOOKS BB JOIN BORROWCARDS BCC ON BB.BOOK_ID = BCC.BOOK_ID
                                         --WHERE MONTH(BCC.BORROW_DATE) = MONTH(GETDATE()) 
                                         --AND YEAR(BCC.BORROW_DATE) = YEAR(GETDATE())
