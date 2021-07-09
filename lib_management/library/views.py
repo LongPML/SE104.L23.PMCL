@@ -1,17 +1,25 @@
 from django.shortcuts import render
 import library.models
 from library.models import *
-import pyodbc
 import datetime
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.contrib import messages
+import pyodbc
 import platform
 import socket
 import os
 server = platform.node()
-driver = 'ODBC Driver 17 for SQL Server'
-conn = pyodbc.connect(f'Driver={driver}; Server={server}; Database=QLTV; Trusted_Connection=yes;')
+drivers = pyodbc.drivers()
+for i in reversed(drivers):
+       conencted = None
+       try:
+              conn = pyodbc.connect(f'Driver={i}; Server={server}; Database=QLTV; Trusted_Connection=yes;')
+              conencted = True
+       except:
+              conencted = False
+       if conencted == True:
+              break
 cursor = conn.cursor()
 # Create your views here.
 def home_view(request, *args, **kwargs):
