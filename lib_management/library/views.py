@@ -6,11 +6,12 @@ import datetime
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.contrib import messages
-conn = pyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'
-                      'Server=NHANCSER\ADMIN;' 
-                    #   'Server=ADMIN;'
-                      'Database=QLTV;'
-                      'Trusted_Connection=yes;')
+import platform
+import socket
+import os
+server = platform.node()
+driver = 'ODBC Driver 17 for SQL Server'
+conn = pyodbc.connect(f'Driver={driver}; Server={server}; Database=QLTV; Trusted_Connection=yes;')
 cursor = conn.cursor()
 # Create your views here.
 def home_view(request, *args, **kwargs):
@@ -305,7 +306,7 @@ def BookDetail(request):
                                         ON BC.LIBCARD_ID = LC.LIBCARD_ID
                                         WHERE (B.BOOK_ID LIKE '%{key}%' or A.NAME LIKE N'%{key}%' 
                                         OR S.NAME LIKE N'%{key}%' or B.TITLE LIKE N'%{key}%')
-                                        AND BC.RETURN_DATE is NULL""")
+                                        AND BC.RETURN_DATE is NULL OR (BC.RETURN_DATE IS NOT NULL AND B.STATE = 1)""")
             search_result = search_result.fetchall()
             for i in range(len(search_result)):
                    if search_result[i][6] != 0:
@@ -328,7 +329,7 @@ def BookDetail(request):
                                         or A.NAME LIKE N'%{key}%' 
                                         OR S.NAME LIKE N'%{key}%' 
                                         or B.TITLE LIKE N'%{key}%')
-                                        AND BC.RETURN_DATE is NULL""")
+                                        AND BC.RETURN_DATE is NULL OR (BC.RETURN_DATE IS NOT NULL AND B.STATE = 1)""")
             return render(request, "res_searchbook.html", {'BookDetail':search_result})
     if request.method=="GET":
         result = cursor.execute(f"""SELECT B.BOOK_ID, B.TITLE, A.NAME AUTHOR, S.NAME SUBJECT, LC.NAME,B.POSITION, B.STATE
@@ -342,7 +343,7 @@ def BookDetail(request):
                                     LEFT JOIN BORROWCARDS BC 
                                     ON BC.BOOK_ID = B.BOOK_ID LEFT JOIN LIBCARDS LC
                                     ON BC.LIBCARD_ID = LC.LIBCARD_ID
-                                    WHERE BC.RETURN_DATE is NULL""")
+                                    WHERE BC.RETURN_DATE is NULL OR (BC.RETURN_DATE IS NOT NULL AND B.STATE = 1)""")
         result = cursor.fetchall()
         for i in range(len(result)):
                if result[i][6] != 0:
