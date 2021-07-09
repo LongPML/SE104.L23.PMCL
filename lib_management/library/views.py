@@ -10,6 +10,7 @@ import platform
 import socket
 import os
 server = platform.node()
+server = 'NHANCSER\ADMIN'
 drivers = pyodbc.drivers()
 for i in reversed(drivers):
        conencted = None
@@ -147,10 +148,9 @@ def BookUpdate(request):
     position = request.POST.get("position")
     state = request.POST.get("state")
     path = request.POST.get("path")
-    
     try:
         if request.method == "POST":
-            if int(state) not in [0,1,2]:
+            if int(state) != 2:
                 messages.error(request,'Update Book Unsucessfully! Please make sure that all information entered is correct!')
                 return redirect(f'/bookEdit/{bookid}')
             cursor.execute(f"""UPDATE BOOKS SET STATE = {state}, POSITION = '{position}', PATH = '{path}' WHERE BOOK_ID = {bookid}""")
