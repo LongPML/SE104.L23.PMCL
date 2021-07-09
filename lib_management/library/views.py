@@ -318,7 +318,7 @@ def BookDetail(request):
                                         ON BC.LIBCARD_ID = LC.LIBCARD_ID
                                         WHERE (B.BOOK_ID LIKE '%{key}%' or A.NAME LIKE N'%{key}%' 
                                         OR S.NAME LIKE N'%{key}%' or B.TITLE LIKE N'%{key}%')
-                                        AND BC.RETURN_DATE is NULL OR (BC.RETURN_DATE IS NOT NULL AND B.STATE = 1)
+                                        AND (BC.RETURN_DATE is NULL OR (BC.RETURN_DATE IS NOT NULL AND B.STATE = 1))
                                         ORDER BY B.BOOK_ID DESC""")
             search_result = search_result.fetchall()
             for i in range(len(search_result)):
@@ -487,8 +487,8 @@ def interestedAuthor(request, *args, **kwargs):
                                         FROM AUTHORS_BOOKS AB JOIN AUTHORS A ON AB.AUTHOR_ID = A.AUTHOR_ID
                                         JOIN BOOKS B ON B.BOOK_ID = AB.BOOK_ID
                                         JOIN BORROWCARDS BC ON BC.BOOK_ID = B.BOOK_ID
-                                        --WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE())
-                                        --AND YEAR(BC.BORROW_DATE) = YEAR(GETDATE())
+                                        WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE())-1
+                                        AND YEAR(BC.BORROW_DATE) = YEAR(GETDATE())
                                         GROUP BY A.NAME) T2
                                         ON T1.AUTHOR = T2.NAME
                                         ORDER BY T2.NumOfBorrowing DESC""")
@@ -503,7 +503,7 @@ def interestedAuthor(request, *args, **kwargs):
                                         FROM AUTHORS_BOOKS AB JOIN AUTHORS A ON AB.AUTHOR_ID = A.AUTHOR_ID
                                         JOIN BOOKS B ON B.BOOK_ID = AB.BOOK_ID
                                         JOIN BORROWCARDS BC ON BC.BOOK_ID = B.BOOK_ID
-                                        WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE())
+                                        WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE())-1
                                         AND YEAR(BC.BORROW_DATE) = YEAR(GETDATE())
                                         GROUP BY A.NAME) T2
                                         ON T1.AUTHOR = T2.NAME
@@ -522,7 +522,7 @@ def interestedTopic(request, *args, **kwargs):
                                         FROM SUBJECTS_BOOKS SB JOIN SUBJECTS S ON SB.SUBJECT_ID = S.SUBJECT_ID
                                         JOIN BOOKS B ON B.BOOK_ID = SB.BOOK_ID
                                         JOIN BORROWCARDS BC ON BC.BOOK_ID = B.BOOK_ID
-                                        WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE())
+                                        WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE())-1
                                         AND YEAR(BC.BORROW_DATE) = YEAR(GETDATE())
                                         GROUP BY S.NAME) T2
                                         ON T1.TOPIC = T2.NAME
@@ -538,7 +538,7 @@ def interestedTopic(request, *args, **kwargs):
                                         FROM SUBJECTS_BOOKS SB JOIN SUBJECTS S ON SB.SUBJECT_ID = S.SUBJECT_ID
                                         JOIN BOOKS B ON B.BOOK_ID = SB.BOOK_ID
                                         JOIN BORROWCARDS BC ON BC.BOOK_ID = B.BOOK_ID
-                                        WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE())
+                                        WHERE MONTH(BC.BORROW_DATE) = MONTH(GETDATE())-1
                                         AND YEAR(BC.BORROW_DATE) = YEAR(GETDATE())
                                         GROUP BY S.NAME) T2
                                         ON T1.TOPIC = T2.NAME
