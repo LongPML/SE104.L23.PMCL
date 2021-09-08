@@ -12,4 +12,6 @@ This project is built based on Django Platform
 - Open your Microsoft Sql Server Management Studio and run query FinalCreateDatabasesql.sql in ./SE104.L23.PMCL/Database
 - The default account will auto generate with username = 'ADMIN' and password='ADMIN', you can use this!
 
+## Clip demo: https://youtu.be/bMuTe2SKwlI
+
 Hope you enjoy it!
